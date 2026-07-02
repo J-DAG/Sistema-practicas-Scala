@@ -11,6 +11,7 @@ import scala.util.Using
 class PostulacionRepositorio {
 
   def crear(idEstudiante: Long, idOferta: Long, rutaDocumentoMalla: String): Long = {
+    validarEstudiantePuedePostular(idEstudiante)
     val sql =
       """
         |INSERT INTO postulaciones (id_estudiante, id_oferta, fecha_postulacion, estado, ruta_documento_malla)
@@ -28,6 +29,27 @@ class PostulacionRepositorio {
       val resultado = use(sentencia.executeQuery())
 
       if (resultado.next()) resultado.getLong(1) else 0L
+    }.get
+  }
+
+  private def validarEstudiantePuedePostular(idEstudiante: Long): Unit = {
+    val sql =
+      """
+        |SELECT COUNT(*)
+        |FROM practicas
+        |WHERE id_estudiante = ?
+        |  AND LOWER(estado) IN ('activa', 'finalizada', 'completada')
+        |""".stripMargin
+
+    Using.Manager { use =>
+      val conexion = use(Conexion.obtener())
+      val sentencia = use(conexion.prepareStatement(sql))
+      sentencia.setLong(1, idEstudiante)
+      val resultado = use(sentencia.executeQuery())
+
+      if (resultado.next() && resultado.getInt(1) > 0) {
+        throw new IllegalStateException("El estudiante ya tiene o ya completo una practica, no puede enviar nuevas postulaciones.")
+      }
     }.get
   }
 
@@ -84,8 +106,7 @@ class PostulacionRepositorio {
   def cancelarPendiente(idPostulacion: Long, idEstudiante: Long): Int = {
     val sql =
       """
-        |UPDATE postulaciones
-        |SET estado = 'cancelada'
+        |DELETE FROM postulaciones
         |WHERE id_postulacion = ?
         |  AND id_estudiante = ?
         |  AND LOWER(estado) = 'pendiente'
@@ -96,6 +117,24 @@ class PostulacionRepositorio {
       val sentencia = use(conexion.prepareStatement(sql))
       sentencia.setLong(1, idPostulacion)
       sentencia.setLong(2, idEstudiante)
+      sentencia.executeUpdate()
+    }.get
+  }
+
+  def cancelarPendientePorOferta(idEstudiante: Long, idOferta: Long): Int = {
+    val sql =
+      """
+        |DELETE FROM postulaciones
+        |WHERE id_estudiante = ?
+        |  AND id_oferta = ?
+        |  AND LOWER(estado) = 'pendiente'
+        |""".stripMargin
+
+    Using.Manager { use =>
+      val conexion = use(Conexion.obtener())
+      val sentencia = use(conexion.prepareStatement(sql))
+      sentencia.setLong(1, idEstudiante)
+      sentencia.setLong(2, idOferta)
       sentencia.executeUpdate()
     }.get
   }

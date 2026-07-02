@@ -4,11 +4,7 @@ import modelo.bd.Conexion
 import modelo.repositorios.UsuarioRepositorio
 import modelo.seguridad.SeguridadPassword
 import modelo.entidades.Usuario
-import vista.{
-  VistaInicioSesion,
-  VistaMainTutorAcademico,
-  VistaMainTutorEmpresarial
-}
+import vista.VistaInicioSesion
 
 import java.sql.SQLException
 import javax.swing.{JButton, JFrame, JOptionPane}
@@ -86,16 +82,12 @@ class ControlPrincipal {
         new ControlVentanaEstudiante(usuario, () => mostrarLogin()).mostrar()
 
       case "tutor_academico" | "tutor academico" | "ta" =>
-        val panel = new VistaMainTutorAcademico()
-        panel.lblInformacion.setText(s"Bienvenido ${usuario.nombreCompleto}")
-        configurarCerrarSesion(panel, panel.btnCerrarSesion, panel.btnCerrarSesion_2, panel.mniCerrarSesion)
-        mostrarPanel(panel)
+        vista.setVisible(false)
+        new ControlVentanaTA(usuario, () => mostrarLogin()).mostrar()
 
       case "tutor_empresarial" | "tutor empresarial" | "te" =>
-        val panel = new VistaMainTutorEmpresarial()
-        panel.lblInformacion.setText(s"Bienvenido ${usuario.nombreCompleto}")
-        configurarCerrarSesion(panel, panel.btnCerrarSesion, panel.btnCerrarSesion_2, panel.mniCerrarSesion)
-        mostrarPanel(panel)
+        vista.setVisible(false)
+        new ControlVentanaTE(usuario, () => mostrarLogin()).mostrar()
 
       case _ =>
         JOptionPane.showMessageDialog(

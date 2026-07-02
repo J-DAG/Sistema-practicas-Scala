@@ -3,11 +3,34 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Project generated files ###
+documentos_postulacion/
+*.pdf
+*.docx
+*.xlsx
+*.tmp
+*.temp
+*.log
+
+### Local database/config files ###
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.dump
+src/main/resources/application-local.properties
+
 ### IntelliJ IDEA ###
+.idea/
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/shelf/
 *.iws
 *.iml
 *.ipr
@@ -40,8 +63,14 @@ build/
 ### VS Code ###
 .vscode/
 
-### Mac OS ###
+### OS files ###
 .DS_Store
+Thumbs.db
+desktop.ini
 
 ### Scala ###
 .bsp/
+.metals/
+.scala-build/
+.bloop/
+.history/

@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS actividades (
     descripcion TEXT NOT NULL,
     horas INTEGER NOT NULL CHECK (horas > 0),
     fecha DATE NOT NULL DEFAULT CURRENT_DATE,
+    estado_revision VARCHAR(40) NOT NULL DEFAULT 'pendiente',
     aprobada_por_tutor_academico BOOLEAN NOT NULL DEFAULT FALSE,
     completada_por_tutor_empresarial BOOLEAN NOT NULL DEFAULT FALSE,
     id_tutor_academico_aprobador BIGINT REFERENCES usuarios(id_usuario),
@@ -90,6 +91,16 @@ CREATE TABLE IF NOT EXISTS actividades (
     fecha_aprobacion DATE,
     fecha_completado DATE
 );
+
+ALTER TABLE actividades
+    ADD COLUMN IF NOT EXISTS estado_revision VARCHAR(40) NOT NULL DEFAULT 'pendiente';
+
+UPDATE actividades
+SET estado_revision = CASE
+    WHEN completada_por_tutor_empresarial THEN 'completada'
+    WHEN aprobada_por_tutor_academico THEN 'aprobada'
+    ELSE estado_revision
+END;
 
 CREATE TABLE IF NOT EXISTS notificaciones (
     id_notificacion BIGSERIAL PRIMARY KEY,

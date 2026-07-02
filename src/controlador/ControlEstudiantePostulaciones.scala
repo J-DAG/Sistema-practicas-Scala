@@ -18,8 +18,8 @@ class ControlEstudiantePostulaciones(usuario: Usuario, alInicio: () => Unit, alC
   vista.btnCancelarPostulacion.addActionListener(_ => cancelarPostulacion())
   vista.btnOfertaLaboral.addActionListener(_ => abrirOfertas())
   vista.btnCerrarSesion.addActionListener(_ => cerrarSesion())
-  vista.btnMiPractica.addActionListener(_ => moduloPendiente("Mi practica"))
-  vista.btnMisFormularios.addActionListener(_ => moduloPendiente("Formularios"))
+  vista.btnMiPractica.addActionListener(_ => abrirPractica())
+  vista.btnMisFormularios.addActionListener(_ => abrirFormularios())
 
   def mostrar(): Unit = {
     cargarDatos()
@@ -61,6 +61,16 @@ class ControlEstudiantePostulaciones(usuario: Usuario, alInicio: () => Unit, alC
     new ControlEstudianteOfertas(usuario, alInicio, alCerrarSesion).mostrar()
   }
 
+  private def abrirPractica(): Unit = {
+    vista.dispose()
+    new ControlEstudiantePractica(usuario, alInicio, alCerrarSesion).mostrar()
+  }
+
+  private def abrirFormularios(): Unit = {
+    vista.dispose()
+    new ControlEstudianteFormularios(usuario, alInicio, alCerrarSesion).mostrar()
+  }
+
   private def cancelarPostulacion(): Unit = {
     val fila = vista.tblPostulaciones.getSelectedRow
     if (fila < 0) {
@@ -77,7 +87,7 @@ class ControlEstudiantePostulaciones(usuario: Usuario, alInicio: () => Unit, alC
     val idPostulacion = vista.tblPostulaciones.getValueAt(fila, 0).toString.toLong
     val respuesta = JOptionPane.showConfirmDialog(
       vista,
-      "Desea cancelar esta postulacion?",
+      "Desea cancelar y eliminar esta postulacion pendiente?",
       "Confirmar cancelacion",
       JOptionPane.YES_NO_OPTION
     )
@@ -85,6 +95,7 @@ class ControlEstudiantePostulaciones(usuario: Usuario, alInicio: () => Unit, alC
     if (respuesta == JOptionPane.YES_OPTION) {
       val actualizadas = postulaciones.cancelarPendiente(idPostulacion, usuario.idUsuario)
       if (actualizadas > 0) {
+        JOptionPane.showMessageDialog(vista, "Postulacion cancelada y eliminada correctamente.")
         cargarDatos()
       } else {
         JOptionPane.showMessageDialog(vista, "No se pudo cancelar la postulacion. Verifique que siga pendiente.")
