@@ -16,7 +16,7 @@ public class VistaAplicarPostulacion extends JFrame {
 
     public VistaAplicarPostulacion() {
         setTitle("Aplicar postulacion");
-        setSize(650, 260);
+        setSize(700, 300);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -44,23 +44,23 @@ public class VistaAplicarPostulacion extends JFrame {
 
         txtDocumento = new JTextField();
         txtDocumento.setEditable(false);
-        txtDocumento.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtDocumento.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         txtDocumento.setBounds(180, 115, 301, 31);
         getContentPane().add(txtDocumento);
 
-        btnSeleccionarDocumento = new JButton("Seleccionar PDF", new ImageIcon("./iconos/visibility.png"));
+        btnSeleccionarDocumento = new JButton("Seleccionar PDF", RecursoVista.icono("visibility.png"));
         btnSeleccionarDocumento.setFont(new Font("Segoe UI", Font.PLAIN, 10));
         btnSeleccionarDocumento.setBounds(490, 115, 131, 31);
         getContentPane().add(btnSeleccionarDocumento);
 
         btnCancelar = new JButton("Cancelar");
         btnCancelar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnCancelar.setBounds(390, 175, 101, 31);
+        btnCancelar.setBounds(415, 175, 101, 31);
         getContentPane().add(btnCancelar);
 
-        btnEnviar = new JButton("Enviar postulacion", new ImageIcon("./iconos/save.png"));
+        btnEnviar = new JButton("Enviar postulacion", RecursoVista.icono("save.png"));
         btnEnviar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnEnviar.setBounds(500, 175, 131, 31);
+        btnEnviar.setBounds(525, 175, 131, 31);
         getContentPane().add(btnEnviar);
     }
 }

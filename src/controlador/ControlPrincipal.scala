@@ -17,8 +17,10 @@ class ControlPrincipal {
   vista.lblPregunta.setVisible(false)
   vista.btnIniciarSesion.addActionListener(_ => iniciarSesion())
 
-  def mostrar(): Unit =
+  def mostrar(): Unit = {
+    vista.setLocationRelativeTo(null)
     vista.setVisible(true)
+  }
 
   private def iniciarSesion(): Unit = {
     val identificador = vista.txtUsuario.getText.trim

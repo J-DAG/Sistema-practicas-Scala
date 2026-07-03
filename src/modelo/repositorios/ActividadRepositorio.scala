@@ -203,6 +203,9 @@ class ActividadRepositorio {
     try {
       conexion.setAutoCommit(false)
       val actividad = buscarBloqueada(conexion, idActividad)
+      if (!actividad.completadaPorTutorEmpresarial) {
+        throw new IllegalStateException("Solo se pueden marcar como pendientes las actividades completadas.")
+      }
       validarPracticaActivaOFinalizada(conexion, actividad.idPractica)
 
       val sentencia = conexion.prepareStatement(
@@ -376,8 +379,8 @@ class ActividadRepositorio {
 
   private def validarPracticaActivaOFinalizada(conexion: Connection, idPractica: Long): Unit = {
     val estado = estadoPractica(conexion, idPractica)
-    if (!Set("activa", "finalizada", "completada").contains(estado.toLowerCase)) {
-      throw new IllegalStateException("La practica no permite modificar actividades.")
+    if (!Set("activa", "finalizada").contains(estado.toLowerCase)) {
+      throw new IllegalStateException("Solo se pueden modificar actividades de practicas activas o finalizadas sin calificacion.")
     }
   }
 
@@ -440,7 +443,7 @@ class ActividadRepositorio {
   private def reabrirSiBajaDe240(conexion: Connection, idPractica: Long): Unit = {
     val horas = obtenerHorasCumplidas(conexion, idPractica)
     if (horas < 240) {
-      val sentencia = conexion.prepareStatement("UPDATE practicas SET estado = 'activa' WHERE id_practica = ? AND LOWER(estado) IN ('finalizada', 'completada')")
+      val sentencia = conexion.prepareStatement("UPDATE practicas SET estado = 'activa' WHERE id_practica = ? AND LOWER(estado) = 'finalizada'")
       try {
         sentencia.setLong(1, idPractica)
         sentencia.executeUpdate()

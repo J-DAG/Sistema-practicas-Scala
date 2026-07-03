@@ -63,7 +63,7 @@ class ControlTEPracticasCompletadas(usuario: Usuario, alInicio: () => Unit, alCe
   }
 
   private def verNotificaciones(): Unit =
-    JOptionPane.showMessageDialog(vista, "El panel de notificaciones del tutor empresarial se conectara en el siguiente paso.")
+    DialogoNotificaciones.mostrar(vista, usuario)
 
   private def volverInicio(): Unit = {
     vista.dispose()

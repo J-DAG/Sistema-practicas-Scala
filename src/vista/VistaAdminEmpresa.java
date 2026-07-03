@@ -23,13 +23,13 @@ public class VistaAdminEmpresa extends JFrame {
 
     public VistaAdminEmpresa() {
         setTitle("Administracion de empresas");
-        setSize(1200, 800);
+        setSize(1250, 840);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
         getContentPane().setBackground(Color.WHITE);
 
-        lblIcono = new JLabel(new ImageIcon("./iconos/settings.png"));
+        lblIcono = new JLabel(RecursoVista.icono("settings.png"));
         lblIcono.setBounds(20, 20, 31, 31);
         getContentPane().add(lblIcono);
 
@@ -38,22 +38,22 @@ public class VistaAdminEmpresa extends JFrame {
         lblTitulo.setBounds(50, 20, 161, 31);
         getContentPane().add(lblTitulo);
 
-        btnInicio = new JButton("Inicio", new ImageIcon("./iconos/home.png"));
+        btnInicio = new JButton("Inicio", RecursoVista.icono("home.png"));
         btnInicio.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnInicio.setBounds(680, 30, 111, 31);
         getContentPane().add(btnInicio);
 
-        btnUsuarios = new JButton("Usuarios", new ImageIcon("./iconos/account.png"));
+        btnUsuarios = new JButton("Usuarios", RecursoVista.icono("account.png"));
         btnUsuarios.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnUsuarios.setBounds(800, 30, 111, 31);
         getContentPane().add(btnUsuarios);
 
-        btnEmpresa = new JButton("Empresas", new ImageIcon("./iconos/apartment.png"));
+        btnEmpresa = new JButton("Empresas", RecursoVista.icono("apartment.png"));
         btnEmpresa.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnEmpresa.setBounds(920, 30, 111, 31);
         getContentPane().add(btnEmpresa);
 
-        btnCerrarSesion = new JButton("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        btnCerrarSesion = new JButton("Cerrar sesion", RecursoVista.icono("logout.png"));
         btnCerrarSesion.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnCerrarSesion.setBounds(1040, 30, 111, 31);
         getContentPane().add(btnCerrarSesion);
@@ -64,42 +64,42 @@ public class VistaAdminEmpresa extends JFrame {
         getContentPane().add(lblSubTitulo);
 
         lblInformacion = new JLabel("Administracion de empresas");
-        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 11));
         lblInformacion.setBounds(20, 110, 171, 21);
         getContentPane().add(lblInformacion);
 
-        JLabel label = new JLabel(new ImageIcon("./iconos/search.png"));
-        label.setBounds(90, 160, 31, 31);
+        JLabel label = new JLabel(RecursoVista.icono("search.png"));
+        label.setBounds(115, 160, 31, 31);
         getContentPane().add(label);
 
         txtBuscar = new JTextField();
-        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        txtBuscar.setBounds(120, 160, 741, 31);
+        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 11));
+        txtBuscar.setBounds(145, 160, 741, 31);
         getContentPane().add(txtBuscar);
 
-        btnBuscar = new JButton("Buscar", new ImageIcon("./iconos/search.png"));
+        btnBuscar = new JButton("Buscar", RecursoVista.icono("search.png"));
         btnBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnBuscar.setBounds(870, 160, 111, 31);
+        btnBuscar.setBounds(895, 160, 111, 31);
         getContentPane().add(btnBuscar);
 
-        btnNuevoUsuario = new JButton("Nueva empresa", new ImageIcon("./iconos/add_24.png"));
+        btnNuevoUsuario = new JButton("Nueva empresa", RecursoVista.icono("add_24.png"));
         btnNuevoUsuario.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnNuevoUsuario.setBounds(990, 160, 131, 31);
+        btnNuevoUsuario.setBounds(1015, 160, 131, 31);
         getContentPane().add(btnNuevoUsuario);
 
         tblEmpresas = new JTable(new DefaultTableModel());
         JScrollPane scrollEmpresas = new JScrollPane(tblEmpresas);
-        scrollEmpresas.setBounds(70, 210, 1071, 501);
+        scrollEmpresas.setBounds(95, 210, 1071, 501);
         getContentPane().add(scrollEmpresas);
 
-        btnEliminar = new JButton("Eliminar", new ImageIcon("./iconos/delete.png"));
+        btnEliminar = new JButton("Eliminar", RecursoVista.icono("delete.png"));
         btnEliminar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnEliminar.setBounds(870, 720, 131, 31);
+        btnEliminar.setBounds(895, 720, 131, 31);
         getContentPane().add(btnEliminar);
 
-        btnEditar = new JButton("Editar", new ImageIcon("./iconos/edit.png"));
+        btnEditar = new JButton("Editar", RecursoVista.icono("edit.png"));
         btnEditar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnEditar.setBounds(1010, 720, 131, 31);
+        btnEditar.setBounds(1035, 720, 131, 31);
         getContentPane().add(btnEditar);
     }
 }

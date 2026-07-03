@@ -21,13 +21,13 @@ public class VistaTEPracticasCompletadas extends JFrame {
 
     public VistaTEPracticasCompletadas() {
         setTitle("Practicas completadas");
-        setSize(1200, 800);
+        setSize(1250, 840);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
         getContentPane().setBackground(Color.WHITE);
 
-        lblIcono = new JLabel(new ImageIcon("./iconos/apartment.png"));
+        lblIcono = new JLabel(RecursoVista.icono("apartment.png"));
         lblIcono.setBounds(30, 30, 31, 31);
         getContentPane().add(lblIcono);
 
@@ -36,27 +36,27 @@ public class VistaTEPracticasCompletadas extends JFrame {
         lblTitulo.setBounds(60, 30, 191, 31);
         getContentPane().add(lblTitulo);
 
-        btnInico = new JButton("Inicio", new ImageIcon("./iconos/home.png"));
+        btnInico = new JButton("Inicio", RecursoVista.icono("home.png"));
         btnInico.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnInico.setBounds(390, 30, 171, 31);
         getContentPane().add(btnInico);
 
-        btnPracticasProgreso = new JButton("Practicas en progreso", new ImageIcon("./iconos/hourglass_top.png"));
+        btnPracticasProgreso = new JButton("Practicas en progreso", RecursoVista.icono("hourglass_top.png"));
         btnPracticasProgreso.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnPracticasProgreso.setBounds(570, 30, 171, 31);
         getContentPane().add(btnPracticasProgreso);
 
-        btnPracticasCompletadas = new JButton("Practicas completadas", new ImageIcon("./iconos/check_circle.png"));
+        btnPracticasCompletadas = new JButton("Practicas completadas", RecursoVista.icono("check_circle.png"));
         btnPracticasCompletadas.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnPracticasCompletadas.setBounds(750, 30, 171, 31);
         getContentPane().add(btnPracticasCompletadas);
 
-        btnNotificaciones = new JButton("Notificaciones", new ImageIcon("./iconos/notification.png"));
+        btnNotificaciones = new JButton("Notificaciones", RecursoVista.icono("notification.png"));
         btnNotificaciones.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnNotificaciones.setBounds(930, 30, 141, 31);
         getContentPane().add(btnNotificaciones);
 
-        btnCerrarSesion = new JButton("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        btnCerrarSesion = new JButton("Cerrar sesion", RecursoVista.icono("logout.png"));
         btnCerrarSesion.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnCerrarSesion.setBounds(1080, 30, 111, 31);
         getContentPane().add(btnCerrarSesion);
@@ -66,23 +66,23 @@ public class VistaTEPracticasCompletadas extends JFrame {
         lblSubTitulo.setBounds(50, 90, 561, 31);
         getContentPane().add(lblSubTitulo);
 
-        lblIconoBuscar = new JLabel(new ImageIcon("./iconos/search.png"));
-        lblIconoBuscar.setBounds(70, 170, 31, 31);
+        lblIconoBuscar = new JLabel(RecursoVista.icono("search.png"));
+        lblIconoBuscar.setBounds(95, 170, 31, 31);
         getContentPane().add(lblIconoBuscar);
 
         txtBuscar = new JTextField();
-        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        txtBuscar.setBounds(100, 170, 761, 31);
+        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 11));
+        txtBuscar.setBounds(125, 170, 761, 31);
         getContentPane().add(txtBuscar);
 
-        btnBuscar = new JButton("Buscar", new ImageIcon("./iconos/search.png"));
+        btnBuscar = new JButton("Buscar", RecursoVista.icono("search.png"));
         btnBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnBuscar.setBounds(870, 170, 111, 31);
+        btnBuscar.setBounds(895, 170, 111, 31);
         getContentPane().add(btnBuscar);
 
         tblPracticasCompletadas = new JTable(new DefaultTableModel());
         JScrollPane scrollPracticas = new JScrollPane(tblPracticasCompletadas);
-        scrollPracticas.setBounds(60, 220, 1081, 501);
+        scrollPracticas.setBounds(85, 220, 1081, 501);
         getContentPane().add(scrollPracticas);
     }
 }

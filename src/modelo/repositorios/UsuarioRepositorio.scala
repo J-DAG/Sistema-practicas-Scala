@@ -3,7 +3,7 @@ package modelo.repositorios
 import modelo.bd.Conexion
 import modelo.entidades.{EstudianteResumen, TutorResumen, Usuario, UsuarioFactory}
 
-import java.sql.ResultSet
+import java.sql.{Connection, ResultSet}
 import scala.util.Using
 
 class UsuarioRepositorio {
@@ -317,14 +317,122 @@ class UsuarioRepositorio {
   }
 
   def eliminar(idUsuario: Long): Int = {
-    val sql = "DELETE FROM usuarios WHERE id_usuario = ?"
+    eliminarConReasignacion(idUsuario, None)
+  }
 
+  def eliminarConReasignacion(idUsuario: Long, idReemplazo: Option[Long]): Int = {
+    val conexion = Conexion.obtener()
+    try {
+      conexion.setAutoCommit(false)
+      val usuario = buscarPorIdBloqueado(conexion, idUsuario)
+
+      usuario.rol.trim.toLowerCase match {
+        case "estudiante" =>
+          eliminarDependenciasEstudiante(conexion, idUsuario)
+        case "tutor_academico" | "tutor academico" | "ta" =>
+          val tieneReferencias = contarReferenciasTutor(conexion, idUsuario, "tutor_academico") > 0
+          if (tieneReferencias) {
+            val reemplazo = idReemplazo.getOrElse {
+              throw new IllegalStateException("Debe seleccionar un tutor academico de reemplazo.")
+            }
+            validarTutorAcademicoReemplazo(conexion, idUsuario, reemplazo)
+            reasignarTutorAcademico(conexion, idUsuario, reemplazo)
+          }
+        case "tutor_empresarial" | "tutor empresarial" | "te" =>
+          val tieneReferencias = contarReferenciasTutor(conexion, idUsuario, "tutor_empresarial") > 0
+          if (tieneReferencias) {
+            val reemplazo = idReemplazo.getOrElse {
+              throw new IllegalStateException("Debe seleccionar un tutor empresarial de reemplazo.")
+            }
+            validarTutorEmpresarialReemplazo(conexion, usuario, reemplazo)
+            reasignarTutorEmpresarial(conexion, idUsuario, reemplazo)
+          }
+        case _ =>
+      }
+
+      val eliminados = eliminarUsuario(conexion, idUsuario)
+      conexion.commit()
+      eliminados
+    } catch {
+      case error: Exception =>
+        conexion.rollback()
+        throw error
+    } finally {
+      conexion.close()
+    }
+  }
+
+  def candidatosReemplazoTutor(idUsuario: Long): List[Usuario] = {
+    buscarPorId(idUsuario) match {
+      case Some(usuario) if usuario.rol.equalsIgnoreCase("tutor_academico") =>
+        listarTutoresAcademicosActivos().filterNot(_.idUsuario == idUsuario)
+      case Some(usuario) if usuario.rol.equalsIgnoreCase("tutor_empresarial") =>
+        usuario.idEmpresa match {
+          case Some(idEmpresa) => listarTutoresEmpresarialesActivosPorEmpresa(idEmpresa).filterNot(_.idUsuario == idUsuario)
+          case None => Nil
+        }
+      case _ =>
+        Nil
+    }
+  }
+
+  def requiereReasignacionTutor(idUsuario: Long): Boolean = {
+    buscarPorId(idUsuario).exists { usuario =>
+      val rol = usuario.rol.trim.toLowerCase
+      (rol == "tutor_academico" || rol == "tutor_empresarial") && contarReferenciasTutor(idUsuario, rol) > 0
+    }
+  }
+
+  private def contarReferenciasTutor(idUsuario: Long, rol: String): Int = {
+    val sql =
+      if (rol == "tutor_academico") {
+        """
+          |SELECT
+          |  (SELECT COUNT(*) FROM practicas WHERE id_tutor_academico = ?) +
+          |  (SELECT COUNT(*) FROM actividades WHERE id_tutor_academico_aprobador = ?)
+          |""".stripMargin
+      } else {
+        """
+          |SELECT
+          |  (SELECT COUNT(*) FROM practicas WHERE id_tutor_empresarial = ?) +
+          |  (SELECT COUNT(*) FROM actividades WHERE id_tutor_empresarial_completador = ?)
+          |""".stripMargin
+      }
     Using.Manager { use =>
       val conexion = use(Conexion.obtener())
       val sentencia = use(conexion.prepareStatement(sql))
       sentencia.setLong(1, idUsuario)
-      sentencia.executeUpdate()
+      sentencia.setLong(2, idUsuario)
+      val resultado = use(sentencia.executeQuery())
+      if (resultado.next()) resultado.getInt(1) else 0
     }.get
+  }
+
+  private def contarReferenciasTutor(conexion: Connection, idUsuario: Long, rol: String): Int = {
+    val sql =
+      if (rol == "tutor_academico") {
+        """
+          |SELECT
+          |  (SELECT COUNT(*) FROM practicas WHERE id_tutor_academico = ?) +
+          |  (SELECT COUNT(*) FROM actividades WHERE id_tutor_academico_aprobador = ?)
+          |""".stripMargin
+      } else {
+        """
+          |SELECT
+          |  (SELECT COUNT(*) FROM practicas WHERE id_tutor_empresarial = ?) +
+          |  (SELECT COUNT(*) FROM actividades WHERE id_tutor_empresarial_completador = ?)
+          |""".stripMargin
+      }
+    val sentencia = conexion.prepareStatement(sql)
+    try {
+      sentencia.setLong(1, idUsuario)
+      sentencia.setLong(2, idUsuario)
+      val resultado = sentencia.executeQuery()
+      try if (resultado.next()) resultado.getInt(1) else 0
+      finally resultado.close()
+    } finally {
+      sentencia.close()
+    }
   }
 
   def buscarPorUsuarioOEmail(identificador: String): Option[Usuario] = {
@@ -366,6 +474,82 @@ class UsuarioRepositorio {
       idEmpresa = obtenerLongOpcional(resultado, "id_empresa"),
       cargo = Option(resultado.getString("cargo"))
     )
+
+  private def buscarPorIdBloqueado(conexion: Connection, idUsuario: Long): Usuario = {
+    val sentencia = conexion.prepareStatement(s"SELECT $columnasUsuario FROM usuarios WHERE id_usuario = ? FOR UPDATE")
+    try {
+      sentencia.setLong(1, idUsuario)
+      val resultado = sentencia.executeQuery()
+      try {
+        if (resultado.next()) mapearUsuario(resultado)
+        else throw new IllegalStateException("No se encontro el usuario.")
+      } finally {
+        resultado.close()
+      }
+    } finally {
+      sentencia.close()
+    }
+  }
+
+  private def eliminarDependenciasEstudiante(conexion: Connection, idEstudiante: Long): Unit = {
+    ejecutar(conexion, "DELETE FROM practicas WHERE id_estudiante = ?", idEstudiante)
+    ejecutar(conexion, "DELETE FROM postulaciones WHERE id_estudiante = ?", idEstudiante)
+  }
+
+  private def validarTutorAcademicoReemplazo(conexion: Connection, idTutorActual: Long, idReemplazo: Long): Unit = {
+    if (idTutorActual == idReemplazo) {
+      throw new IllegalStateException("El tutor de reemplazo debe ser diferente al tutor eliminado.")
+    }
+    val reemplazo = buscarPorIdBloqueado(conexion, idReemplazo)
+    if (!reemplazo.activo || !reemplazo.rol.equalsIgnoreCase("tutor_academico")) {
+      throw new IllegalStateException("Seleccione un tutor academico activo como reemplazo.")
+    }
+  }
+
+  private def validarTutorEmpresarialReemplazo(conexion: Connection, tutorActual: Usuario, idReemplazo: Long): Unit = {
+    if (tutorActual.idUsuario == idReemplazo) {
+      throw new IllegalStateException("El tutor de reemplazo debe ser diferente al tutor eliminado.")
+    }
+    val reemplazo = buscarPorIdBloqueado(conexion, idReemplazo)
+    if (!reemplazo.activo || !reemplazo.rol.equalsIgnoreCase("tutor_empresarial")) {
+      throw new IllegalStateException("Seleccione un tutor empresarial activo como reemplazo.")
+    }
+    if (tutorActual.idEmpresa.isEmpty || reemplazo.idEmpresa != tutorActual.idEmpresa) {
+      throw new IllegalStateException("El tutor empresarial de reemplazo debe pertenecer a la misma empresa.")
+    }
+  }
+
+  private def reasignarTutorAcademico(conexion: Connection, idTutorActual: Long, idReemplazo: Long): Unit = {
+    ejecutar(conexion, "UPDATE practicas SET id_tutor_academico = ? WHERE id_tutor_academico = ?", idReemplazo, idTutorActual)
+    ejecutar(conexion, "UPDATE actividades SET id_tutor_academico_aprobador = ? WHERE id_tutor_academico_aprobador = ?", idReemplazo, idTutorActual)
+  }
+
+  private def reasignarTutorEmpresarial(conexion: Connection, idTutorActual: Long, idReemplazo: Long): Unit = {
+    ejecutar(conexion, "UPDATE practicas SET id_tutor_empresarial = ? WHERE id_tutor_empresarial = ?", idReemplazo, idTutorActual)
+    ejecutar(conexion, "UPDATE actividades SET id_tutor_empresarial_completador = ? WHERE id_tutor_empresarial_completador = ?", idReemplazo, idTutorActual)
+  }
+
+  private def eliminarUsuario(conexion: Connection, idUsuario: Long): Int = {
+    val sentencia = conexion.prepareStatement("DELETE FROM usuarios WHERE id_usuario = ?")
+    try {
+      sentencia.setLong(1, idUsuario)
+      sentencia.executeUpdate()
+    } finally {
+      sentencia.close()
+    }
+  }
+
+  private def ejecutar(conexion: Connection, sql: String, parametros: Long*): Int = {
+    val sentencia = conexion.prepareStatement(sql)
+    try {
+      parametros.zipWithIndex.foreach { case (valor, indice) =>
+        sentencia.setLong(indice + 1, valor)
+      }
+      sentencia.executeUpdate()
+    } finally {
+      sentencia.close()
+    }
+  }
 
   private def listarPorRolActivo(rol: String): List[Usuario] = {
     val sql =

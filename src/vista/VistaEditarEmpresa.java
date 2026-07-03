@@ -24,7 +24,7 @@ public class VistaEditarEmpresa extends JFrame {
 
     public VistaEditarEmpresa() {
         setTitle("Editar informacion de la empresa");
-        setSize(800, 610);
+        setSize(850, 650);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -41,7 +41,7 @@ public class VistaEditarEmpresa extends JFrame {
         getContentPane().add(lblNombre);
 
         txtNombreEmpresa = new JTextField();
-        txtNombreEmpresa.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtNombreEmpresa.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         txtNombreEmpresa.setBounds(180, 90, 431, 31);
         getContentPane().add(txtNombreEmpresa);
 
@@ -51,65 +51,65 @@ public class VistaEditarEmpresa extends JFrame {
         getContentPane().add(lblCorreoElectrinico);
 
         txtCorreoElectronico = new JTextField();
-        txtCorreoElectronico.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        txtCorreoElectronico.setBounds(180, 160, 431, 31);
+        txtCorreoElectronico.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtCorreoElectronico.setBounds(205, 160, 431, 31);
         getContentPane().add(txtCorreoElectronico);
 
         lblCedula = new JLabel("Ruc:");
         lblCedula.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblCedula.setBounds(180, 200, 91, 21);
+        lblCedula.setBounds(205, 200, 91, 21);
         getContentPane().add(lblCedula);
 
         txtRuc = new JTextField();
-        txtRuc.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        txtRuc.setBounds(180, 230, 431, 31);
+        txtRuc.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtRuc.setBounds(205, 230, 431, 31);
         getContentPane().add(txtRuc);
 
         lblConvenio = new JLabel("Tiene convenio:");
         lblConvenio.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblConvenio.setBounds(180, 270, 111, 21);
+        lblConvenio.setBounds(205, 270, 111, 21);
         getContentPane().add(lblConvenio);
 
         rbtSi = new JRadioButton("Si");
-        rbtSi.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        rbtSi.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         rbtSi.setBackground(Color.WHITE);
-        rbtSi.setBounds(320, 280, 101, 17);
+        rbtSi.setBounds(345, 280, 101, 17);
         getContentPane().add(rbtSi);
 
         rbtNo = new JRadioButton("No");
-        rbtNo.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        rbtNo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         rbtNo.setBackground(Color.WHITE);
-        rbtNo.setBounds(450, 280, 101, 17);
+        rbtNo.setBounds(475, 280, 101, 17);
         getContentPane().add(rbtNo);
 
         lblContrasenia = new JLabel("Sector:");
         lblContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblContrasenia.setBounds(180, 310, 91, 21);
+        lblContrasenia.setBounds(205, 310, 91, 21);
         getContentPane().add(lblContrasenia);
 
         txtSector = new JTextField();
-        txtSector.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        txtSector.setBounds(180, 340, 431, 31);
+        txtSector.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtSector.setBounds(205, 340, 431, 31);
         getContentPane().add(txtSector);
 
         lblConfirmarContrasenia = new JLabel("Ubicacion:");
         lblConfirmarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblConfirmarContrasenia.setBounds(180, 380, 151, 21);
+        lblConfirmarContrasenia.setBounds(205, 380, 151, 21);
         getContentPane().add(lblConfirmarContrasenia);
 
         txtUbicacion = new JTextField();
-        txtUbicacion.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        txtUbicacion.setBounds(180, 410, 431, 31);
+        txtUbicacion.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtUbicacion.setBounds(205, 410, 431, 31);
         getContentPane().add(txtUbicacion);
 
         btnCancelar = new JButton("Cancelar");
         btnCancelar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnCancelar.setBounds(330, 480, 91, 31);
+        btnCancelar.setBounds(355, 480, 91, 31);
         getContentPane().add(btnCancelar);
 
-        btnGuardar = new JButton("Guardar", new ImageIcon("./iconos/save.png"));
+        btnGuardar = new JButton("Guardar", RecursoVista.icono("save.png"));
         btnGuardar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnGuardar.setBounds(440, 480, 171, 31);
+        btnGuardar.setBounds(465, 480, 171, 31);
         getContentPane().add(btnGuardar);
     }
 }

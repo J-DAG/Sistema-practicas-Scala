@@ -85,16 +85,36 @@ class ControlAdminUsuarios(usuarioSesion: Usuario, alInicio: () => Unit, alCerra
       return
     }
 
+    val usuarioEliminar = usuarios.buscarPorId(idUsuario) match {
+      case Some(usuario) => usuario
+      case None =>
+        JOptionPane.showMessageDialog(vista, "No se encontro el usuario seleccionado.")
+        return
+    }
+
+    val idReemplazo = reemplazoSiAplica(usuarioEliminar) match {
+      case Some(resultado) => resultado
+      case None => return
+    }
+
+    val mensaje =
+      if (usuarioEliminar.rol.equalsIgnoreCase("estudiante")) {
+        "Esta accion eliminara el estudiante y sus postulaciones, practicas y actividades relacionadas. Desea continuar?"
+      } else {
+        "Esta accion eliminara el usuario de la base de datos. Desea continuar?"
+      }
+
     val respuesta = JOptionPane.showConfirmDialog(
       vista,
-      "Esta accion eliminara el usuario de la base de datos. Desea continuar?",
+      mensaje,
       "Confirmar eliminacion",
       JOptionPane.YES_NO_OPTION
     )
 
     if (respuesta == JOptionPane.YES_OPTION) {
       try {
-        usuarios.eliminar(idUsuario)
+        usuarios.eliminarConReasignacion(idUsuario, idReemplazo)
+        JOptionPane.showMessageDialog(vista, "Usuario eliminado correctamente.")
         cargarDatos()
       } catch {
         case error: SQLException =>
@@ -102,6 +122,39 @@ class ControlAdminUsuarios(usuarioSesion: Usuario, alInicio: () => Unit, alCerra
         case error: Exception =>
           JOptionPane.showMessageDialog(vista, s"No se pudo eliminar el usuario.\n\nDetalle: ${error.getMessage}")
       }
+    }
+  }
+
+  private def reemplazoSiAplica(usuario: Usuario): Option[Option[Long]] = {
+    val rol = usuario.rol.trim.toLowerCase
+    val esTutor = rol == "tutor_academico" || rol == "tutor_empresarial"
+    if (!esTutor || !usuarios.requiereReasignacionTutor(usuario.idUsuario)) {
+      return Some(None)
+    }
+
+    val candidatos = usuarios.candidatosReemplazoTutor(usuario.idUsuario)
+    if (candidatos.isEmpty) {
+      val tipo = if (rol == "tutor_academico") "academico" else "empresarial de la misma empresa"
+      JOptionPane.showMessageDialog(vista, s"No existe un tutor $tipo activo de reemplazo. Cree uno antes de eliminar.")
+      return None
+    }
+
+    val opciones = candidatos.map(tutor => s"${tutor.idUsuario} - ${tutor.nombreCompleto}").toArray
+    val seleccion = JOptionPane.showInputDialog(
+      vista,
+      "El tutor tiene practicas relacionadas. Seleccione el tutor de reemplazo:",
+      "Reasignar tutor",
+      JOptionPane.QUESTION_MESSAGE,
+      null,
+      opciones.asInstanceOf[Array[AnyRef]],
+      opciones.head
+    )
+
+    if (seleccion == null) {
+      None
+    } else {
+      val indice = opciones.indexOf(seleccion.toString)
+      candidatos.lift(indice).map(tutor => Some(tutor.idUsuario))
     }
   }
 

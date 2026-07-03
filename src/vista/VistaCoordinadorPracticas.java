@@ -21,6 +21,7 @@ public class VistaCoordinadorPracticas extends JFrame {
     public JButton btnPostulaciones;
     public JButton btnCerrarSesion;
     public JButton btnBuscar;
+    public JButton btnVerDetalle;
     public JButton btnVerActividades;
     public JTextField txtBuscar;
     public JTable tblPracticas;
@@ -28,13 +29,13 @@ public class VistaCoordinadorPracticas extends JFrame {
 
     public VistaCoordinadorPracticas() {
         setTitle("Administracion de practicas");
-        setSize(1200, 800);
+        setSize(1300, 840);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
         getContentPane().setBackground(Color.WHITE);
 
-        lblIcono = new JLabel(new ImageIcon("./iconos/shield.png"));
+        lblIcono = new JLabel(RecursoVista.icono("shield.png"));
         lblIcono.setBounds(10, 20, 31, 31);
         getContentPane().add(lblIcono);
 
@@ -43,49 +44,49 @@ public class VistaCoordinadorPracticas extends JFrame {
         lblTitulo.setBounds(40, 20, 141, 31);
         getContentPane().add(lblTitulo);
 
-        btnInicio = new JButton("Inicio", new ImageIcon("./iconos/home.png"));
+        btnInicio = new JButton("Inicio", RecursoVista.icono("home.png"));
         btnInicio.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnInicio.setBounds(180, 30, 91, 31);
+        btnInicio.setBounds(170, 30, 90, 31);
         getContentPane().add(btnInicio);
 
-        btnReportes = new JButton("Reportes", new ImageIcon("./iconos/stats.png"));
+        btnReportes = new JButton("Reportes", RecursoVista.icono("stats.png"));
         btnReportes.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnReportes.setBounds(280, 30, 101, 31);
+        btnReportes.setBounds(270, 30, 105, 31);
         getContentPane().add(btnReportes);
 
-        btnEstudiantes = new JButton("Estudiantes", new ImageIcon("./iconos/account.png"));
+        btnEstudiantes = new JButton("Estudiantes", RecursoVista.icono("account.png"));
         btnEstudiantes.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnEstudiantes.setBounds(390, 30, 111, 31);
+        btnEstudiantes.setBounds(385, 30, 125, 31);
         getContentPane().add(btnEstudiantes);
 
-        btnTutores = new JButton("Tutores", new ImageIcon("./iconos/school.png"));
+        btnTutores = new JButton("Tutores", RecursoVista.icono("school.png"));
         btnTutores.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnTutores.setBounds(510, 30, 111, 31);
+        btnTutores.setBounds(520, 30, 105, 31);
         getContentPane().add(btnTutores);
 
-        btnOfertas = new JButton("Ofertas", new ImageIcon("./iconos/forms_add.png"));
+        btnOfertas = new JButton("Ofertas", RecursoVista.icono("forms_add.png"));
         btnOfertas.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnOfertas.setBounds(630, 30, 101, 31);
+        btnOfertas.setBounds(635, 30, 100, 31);
         getContentPane().add(btnOfertas);
 
-        btnEmpresa = new JButton("Empresas", new ImageIcon("./iconos/apartment.png"));
+        btnEmpresa = new JButton("Empresas", RecursoVista.icono("apartment.png"));
         btnEmpresa.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnEmpresa.setBounds(740, 30, 101, 31);
+        btnEmpresa.setBounds(745, 30, 115, 31);
         getContentPane().add(btnEmpresa);
 
-        btnPracticas = new JButton("Practicas", new ImageIcon("./iconos/work.png"));
+        btnPracticas = new JButton("Practicas", RecursoVista.icono("work.png"));
         btnPracticas.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnPracticas.setBounds(850, 30, 101, 31);
+        btnPracticas.setBounds(870, 30, 115, 31);
         getContentPane().add(btnPracticas);
 
-        btnPostulaciones = new JButton("Postulaciones", new ImageIcon("./iconos/lists.png"));
+        btnPostulaciones = new JButton("Postulaciones", RecursoVista.icono("lists.png"));
         btnPostulaciones.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnPostulaciones.setBounds(960, 30, 111, 31);
+        btnPostulaciones.setBounds(995, 30, 130, 31);
         getContentPane().add(btnPostulaciones);
 
-        btnCerrarSesion = new JButton("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        btnCerrarSesion = new JButton("Cerrar sesion", RecursoVista.icono("logout.png"));
         btnCerrarSesion.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnCerrarSesion.setBounds(1080, 30, 111, 31);
+        btnCerrarSesion.setBounds(1135, 30, 135, 31);
         getContentPane().add(btnCerrarSesion);
 
         lblSubTitulo = new JLabel("Administracion de Practicas");
@@ -94,41 +95,46 @@ public class VistaCoordinadorPracticas extends JFrame {
         getContentPane().add(lblSubTitulo);
 
         lblInformacion = new JLabel("Panel de coordinador");
-        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 11));
         lblInformacion.setBounds(30, 110, 141, 21);
         getContentPane().add(lblInformacion);
 
-        JLabel label = new JLabel(new ImageIcon("./iconos/search.png"));
-        label.setBounds(580, 160, 31, 31);
+        JLabel label = new JLabel(RecursoVista.icono("search.png"));
+        label.setBounds(630, 160, 31, 31);
         getContentPane().add(label);
 
         txtBuscar = new JTextField();
-        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        txtBuscar.setBounds(610, 160, 301, 31);
+        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 11));
+        txtBuscar.setBounds(660, 160, 181, 31);
         getContentPane().add(txtBuscar);
 
-        btnBuscar = new JButton("Buscar", new ImageIcon("./iconos/search.png"));
+        btnBuscar = new JButton("Buscar", RecursoVista.icono("search.png"));
         btnBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnBuscar.setBounds(920, 160, 111, 31);
+        btnBuscar.setBounds(850, 160, 111, 31);
         getContentPane().add(btnBuscar);
 
-        btnVerActividades = new JButton("Ver actividades", new ImageIcon("./iconos/visibility.png"));
+        btnVerDetalle = new JButton("Ver detalle", RecursoVista.icono("visibility.png"));
+        btnVerDetalle.setFont(new Font("Dialog", Font.PLAIN, 10));
+        btnVerDetalle.setBounds(970, 160, 111, 31);
+        getContentPane().add(btnVerDetalle);
+
+        btnVerActividades = new JButton("Ver actividades", RecursoVista.icono("visibility.png"));
         btnVerActividades.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnVerActividades.setBounds(1040, 160, 131, 31);
+        btnVerActividades.setBounds(1090, 160, 131, 31);
         getContentPane().add(btnVerActividades);
 
         lblEstadoAplicacionPracticas = new JLabel("Estado de Practicas");
         lblEstadoAplicacionPracticas.setFont(new Font("Dialog", Font.BOLD, 18));
-        lblEstadoAplicacionPracticas.setBounds(30, 230, 391, 31);
+        lblEstadoAplicacionPracticas.setBounds(80, 230, 391, 31);
         getContentPane().add(lblEstadoAplicacionPracticas);
 
         widgetGraficoPastel = new JPanel(new BorderLayout());
-        widgetGraficoPastel.setBounds(30, 280, 520, 320);
+        widgetGraficoPastel.setBounds(80, 280, 520, 320);
         getContentPane().add(widgetGraficoPastel);
 
         tblPracticas = new JTable(new DefaultTableModel());
         JScrollPane scrollPracticas = new JScrollPane(tblPracticas);
-        scrollPracticas.setBounds(580, 210, 591, 501);
+        scrollPracticas.setBounds(630, 210, 591, 501);
         getContentPane().add(scrollPracticas);
     }
 }

@@ -28,7 +28,7 @@ public class VistaEditarOferta extends JFrame {
 
     public VistaEditarOferta() {
         setTitle("Edicion de oferta");
-        setSize(800, 700);
+        setSize(850, 740);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -45,7 +45,7 @@ public class VistaEditarOferta extends JFrame {
         getContentPane().add(lblNombre);
 
         cbxListaEmpresas = new JComboBox<>();
-        cbxListaEmpresas.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        cbxListaEmpresas.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         cbxListaEmpresas.setBounds(180, 90, 261, 31);
         getContentPane().add(cbxListaEmpresas);
 
@@ -55,7 +55,7 @@ public class VistaEditarOferta extends JFrame {
         getContentPane().add(lblCupos);
 
         sbxNumCupos = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-        sbxNumCupos.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        sbxNumCupos.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         sbxNumCupos.setBounds(490, 90, 71, 31);
         getContentPane().add(sbxNumCupos);
 
@@ -65,63 +65,63 @@ public class VistaEditarOferta extends JFrame {
         getContentPane().add(lblCorreoElectrinico);
 
         txtTitulo = new JTextField();
-        txtTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        txtTitulo.setBounds(180, 160, 431, 31);
+        txtTitulo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtTitulo.setBounds(205, 160, 431, 31);
         getContentPane().add(txtTitulo);
 
         lblDescripcion = new JLabel("Descripcion:");
         lblDescripcion.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblDescripcion.setBounds(180, 200, 91, 21);
+        lblDescripcion.setBounds(205, 200, 91, 21);
         getContentPane().add(lblDescripcion);
 
         txtDescripcion = new JTextField();
-        txtDescripcion.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        txtDescripcion.setBounds(180, 230, 431, 31);
+        txtDescripcion.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtDescripcion.setBounds(205, 230, 431, 31);
         getContentPane().add(txtDescripcion);
 
         lblArea = new JLabel("Area:");
         lblArea.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblArea.setBounds(180, 270, 51, 21);
+        lblArea.setBounds(205, 270, 51, 21);
         getContentPane().add(lblArea);
 
         txtArea = new JTextField();
-        txtArea.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        txtArea.setBounds(180, 300, 431, 31);
+        txtArea.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtArea.setBounds(205, 300, 431, 31);
         getContentPane().add(txtArea);
 
         lblFechaCierre = new JLabel("Fecha de cierre:");
         lblFechaCierre.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        lblFechaCierre.setBounds(180, 340, 111, 21);
+        lblFechaCierre.setBounds(205, 340, 111, 21);
         getContentPane().add(lblFechaCierre);
 
         dtFecha = new JSpinner(new SpinnerDateModel());
         JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dtFecha, "dd/MM/yyyy");
         dtFecha.setEditor(dateEditor);
-        dtFecha.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        dtFecha.setBounds(180, 405, 351, 31);
+        dtFecha.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        dtFecha.setBounds(205, 405, 351, 31);
         dtFecha.setVisible(false);
         getContentPane().add(dtFecha);
 
         btnSeleccionarFecha = new JButton("Seleccionar en calendario");
         btnSeleccionarFecha.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnSeleccionarFecha.setBounds(180, 370, 181, 31);
+        btnSeleccionarFecha.setBounds(205, 370, 181, 31);
         btnSeleccionarFecha.addActionListener(e -> seleccionarFecha());
         getContentPane().add(btnSeleccionarFecha);
 
         lblFechaSeleccionada = new JLabel();
         lblFechaSeleccionada.setFont(new Font("Segoe UI", Font.BOLD, 11));
-        lblFechaSeleccionada.setBounds(380, 370, 231, 31);
+        lblFechaSeleccionada.setBounds(405, 370, 231, 31);
         getContentPane().add(lblFechaSeleccionada);
         establecerFecha(new Date());
 
         btnCancelar = new JButton("Cancelar");
         btnCancelar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnCancelar.setBounds(330, 590, 91, 31);
+        btnCancelar.setBounds(355, 590, 91, 31);
         getContentPane().add(btnCancelar);
 
-        btnGuardar = new JButton("Guardar y registrar", new ImageIcon("./iconos/forms_add.png"));
+        btnGuardar = new JButton("Guardar y registrar", RecursoVista.icono("forms_add.png"));
         btnGuardar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnGuardar.setBounds(430, 590, 171, 31);
+        btnGuardar.setBounds(455, 590, 171, 31);
         getContentPane().add(btnGuardar);
     }
 

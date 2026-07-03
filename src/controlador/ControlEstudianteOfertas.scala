@@ -208,9 +208,6 @@ class ControlEstudianteOfertas(usuario: Usuario, alInicio: () => Unit, alCerrarS
     new ControlEstudianteFormularios(usuario, alInicio, alCerrarSesion).mostrar()
   }
 
-  private def moduloPendiente(nombre: String): Unit =
-    JOptionPane.showMessageDialog(vista, s"El modulo de $nombre se conectara en el siguiente paso.")
-
   private def volverInicio(): Unit = {
     vista.dispose()
     alInicio()

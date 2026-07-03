@@ -26,9 +26,9 @@ class ControlCoordinadorEmpresas(usuarioSesion: Usuario, alInicio: () => Unit, a
   vista.btnEstudiantes.addActionListener(_ => abrirEstudiantes())
   vista.btnTutores.addActionListener(_ => abrirTutores())
   vista.btnOfertas.addActionListener(_ => abrirOfertas())
-  vista.btnPracticas.addActionListener(_ => moduloPendiente("Practicas"))
+  vista.btnPracticas.addActionListener(_ => abrirPracticas())
   vista.btnPostulaciones.addActionListener(_ => abrirPostulaciones())
-  vista.btnReportes.addActionListener(_ => moduloPendiente("Reportes"))
+  vista.btnReportes.addActionListener(_ => abrirReportes())
 
   def mostrar(): Unit = {
     cargarDatos()
@@ -221,9 +221,6 @@ class ControlCoordinadorEmpresas(usuarioSesion: Usuario, alInicio: () => Unit, a
     }
   }
 
-  private def moduloPendiente(nombre: String): Unit =
-    JOptionPane.showMessageDialog(vista, s"El modulo de $nombre se conectara en el siguiente paso.")
-
   private def volverInicio(): Unit = {
     vista.dispose()
     alInicio()
@@ -247,6 +244,16 @@ class ControlCoordinadorEmpresas(usuarioSesion: Usuario, alInicio: () => Unit, a
   private def abrirPostulaciones(): Unit = {
     vista.dispose()
     new ControlCoordinadorPostulaciones(usuarioSesion, alInicio, alCerrarSesion).mostrar()
+  }
+
+  private def abrirPracticas(): Unit = {
+    vista.dispose()
+    new ControlCoordinadorPracticas(usuarioSesion, alInicio, alCerrarSesion).mostrar()
+  }
+
+  private def abrirReportes(): Unit = {
+    vista.dispose()
+    new ControlCoordinadorReportes(usuarioSesion, alInicio, alCerrarSesion).mostrar()
   }
 
   private def cerrarSesion(): Unit = {

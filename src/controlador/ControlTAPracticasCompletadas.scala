@@ -81,7 +81,7 @@ class ControlTAPracticasCompletadas(usuario: Usuario, alInicio: () => Unit, alCe
             )
             if (confirmar == JOptionPane.YES_OPTION) {
               practicas.calificarPractica(practica.idPractica, usuario.idUsuario, calificacion)
-              JOptionPane.showMessageDialog(vista, "Practica calificada. Formularios finales enviados al estudiante.")
+              JOptionPane.showMessageDialog(vista, "Practica calificada. Formulario 2 final enviado al correo del estudiante.")
               cargarDatos()
             }
           } catch {

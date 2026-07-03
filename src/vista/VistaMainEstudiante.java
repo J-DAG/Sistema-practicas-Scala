@@ -37,7 +37,7 @@ public class VistaMainEstudiante extends JFrame {
 
     public VistaMainEstudiante() {
         setTitle("::Menu de estudiante");
-        setSize(1200, 800);
+        setSize(1250, 840);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
@@ -50,21 +50,21 @@ public class VistaMainEstudiante extends JFrame {
 
         menuInicio = new JMenu("Inicio");
         mniNotificaciones = new JMenuItem("Notificaciones",
-                new ImageIcon("./iconos/notification.png"));
+                RecursoVista.icono("notification.png"));
         mniCerrarSesion = new JMenuItem("Cerrar sesion",
-                new ImageIcon("./iconos/logout.png"));
+                RecursoVista.icono("logout.png"));
         menuInicio.add(mniNotificaciones);
         menuInicio.add(mniCerrarSesion);
 
         menuPracticas = new JMenu("Practicas");
         mniEnProgreso = new JMenuItem("Mi progreso",
-                new ImageIcon("./iconos/hourglass_top.png"));
+                RecursoVista.icono("hourglass_top.png"));
         mniFormularios = new JMenuItem("Mis formularios",
-                new ImageIcon("./iconos/forms_add.png"));
+                RecursoVista.icono("forms_add.png"));
         mniPostulaciones = new JMenuItem("Postulaciones",
-                new ImageIcon("./iconos/lists.png"));
+                RecursoVista.icono("lists.png"));
         mniOfertas = new JMenuItem("Ofertas laborales",
-                new ImageIcon("./iconos/work.png"));
+                RecursoVista.icono("work.png"));
         menuPracticas.add(mniEnProgreso);
         menuPracticas.add(mniFormularios);
         menuPracticas.add(mniPostulaciones);
@@ -78,12 +78,24 @@ public class VistaMainEstudiante extends JFrame {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
 
-        btnOfertas = new JButton("Ofertas laborales", new ImageIcon("./iconos/work.png"));
-        btnFormularios = new JButton("Mis formularios", new ImageIcon("./iconos/forms_add.png"));
-        btnEnProgreso = new JButton("Mi progreso", new ImageIcon("./iconos/hourglass_top.png"));
-        btnPostulaciones = new JButton("Postulaciones", new ImageIcon("./iconos/lists.png"));
-        btnNotificaciones = new JButton("Notificaciones", new ImageIcon("./iconos/notification.png"));
-        btnCerrarSesion = new JButton("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        btnOfertas = new JButton(RecursoVista.icono("work.png"));
+        btnOfertas.setToolTipText("Ofertas laborales");
+        btnOfertas.setFocusable(false);
+        btnFormularios = new JButton(RecursoVista.icono("forms_add.png"));
+        btnFormularios.setToolTipText("Mis formularios");
+        btnFormularios.setFocusable(false);
+        btnEnProgreso = new JButton(RecursoVista.icono("hourglass_top.png"));
+        btnEnProgreso.setToolTipText("Mi progreso");
+        btnEnProgreso.setFocusable(false);
+        btnPostulaciones = new JButton(RecursoVista.icono("lists.png"));
+        btnPostulaciones.setToolTipText("Postulaciones");
+        btnPostulaciones.setFocusable(false);
+        btnNotificaciones = new JButton(RecursoVista.icono("notification.png"));
+        btnNotificaciones.setToolTipText("Notificaciones");
+        btnNotificaciones.setFocusable(false);
+        btnCerrarSesion = new JButton(RecursoVista.icono("logout.png"));
+        btnCerrarSesion.setToolTipText("Cerrar sesion");
+        btnCerrarSesion.setFocusable(false);
 
         toolBar.add(btnOfertas);
         toolBar.add(btnFormularios);
@@ -102,18 +114,18 @@ public class VistaMainEstudiante extends JFrame {
 
         // Central widget components
         btnVerNotificaciones = new JButton("Ver notificaciones",
-                new ImageIcon("./iconos/notification.png"));
-        btnVerNotificaciones.setBounds(920, 20, 141, 31);
+                RecursoVista.icono("notification.png"));
+        btnVerNotificaciones.setBounds(860, 30, 170, 31);
         btnVerNotificaciones.setFont(new Font("Dialog", Font.PLAIN, 10));
         mainPanel.add(btnVerNotificaciones);
 
         btnCerrarSesion_2 = new JButton("Cerrar sesion",
-                new ImageIcon("./iconos/logout.png"));
-        btnCerrarSesion_2.setBounds(1070, 20, 111, 31);
+                RecursoVista.icono("logout.png"));
+        btnCerrarSesion_2.setBounds(1040, 30, 140, 31);
         btnCerrarSesion_2.setFont(new Font("Dialog", Font.PLAIN, 10));
         mainPanel.add(btnCerrarSesion_2);
 
-        lblIcono = new JLabel(new ImageIcon("./iconos/school.png"));
+        lblIcono = new JLabel(RecursoVista.icono("school.png"));
         lblIcono.setBounds(20, 20, 31, 31);
         mainPanel.add(lblIcono);
 
@@ -129,17 +141,17 @@ public class VistaMainEstudiante extends JFrame {
 
         lblInformacion = new JLabel("Panel estudiantil");
         lblInformacion.setBounds(40, 110, 461, 21);
-        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblInformacion);
 
         lblRegistrosRecientes = new JLabel("Lista de ofertas laborales");
-        lblRegistrosRecientes.setBounds(60, 200, 301, 31);
+        lblRegistrosRecientes.setBounds(85, 200, 301, 31);
         lblRegistrosRecientes.setFont(new Font("Dialog", Font.BOLD, 14));
         mainPanel.add(lblRegistrosRecientes);
 
         tblListaOfertasLaborales = new JTable();
         JScrollPane spOfertas = new JScrollPane(tblListaOfertasLaborales);
-        spOfertas.setBounds(60, 240, 1081, 451);
+        spOfertas.setBounds(85, 240, 1081, 451);
         mainPanel.add(spOfertas);
     }
 }

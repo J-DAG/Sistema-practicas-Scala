@@ -16,7 +16,7 @@ public class SelectorFechaDialog extends JDialog {
 
     private SelectorFechaDialog(Window owner, Date fechaInicial) {
         super(owner, "Seleccionar fecha", ModalityType.APPLICATION_MODAL);
-        setSize(430, 430);
+        setSize(460, 460);
         setResizable(false);
         setLocationRelativeTo(owner);
         setLayout(new BorderLayout(8, 8));
@@ -90,7 +90,7 @@ public class SelectorFechaDialog extends JDialog {
         int maximoDia = base.getActualMaximum(Calendar.DAY_OF_MONTH);
         for (int dia = 1; dia <= maximoDia; dia++) {
             JButton botonDia = new JButton(String.valueOf(dia));
-            botonDia.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+            botonDia.setFont(new Font("Segoe UI", Font.PLAIN, 11));
             botonDia.setMargin(new Insets(2, 2, 2, 2));
             int diaSeleccionado = dia;
             botonDia.addActionListener(e -> seleccionarDia(diaSeleccionado));

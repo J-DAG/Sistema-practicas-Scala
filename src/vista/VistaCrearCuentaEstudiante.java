@@ -28,7 +28,7 @@ public class VistaCrearCuentaEstudiante extends JFrame {
 
     public VistaCrearCuentaEstudiante() {
         setTitle("Registar nuevo estudiante");
-        setSize(800, 750);
+        setSize(850, 790);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
@@ -44,7 +44,7 @@ public class VistaCrearCuentaEstudiante extends JFrame {
 
         lblSubtitulo = new JLabel("Crea una cuenta en el sistema para estudiantes.");
         lblSubtitulo.setBounds(180, 40, 251, 21);
-        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 8));
+        lblSubtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblSubtitulo);
 
         lblNombres = new JLabel("Nombres:");
@@ -54,84 +54,84 @@ public class VistaCrearCuentaEstudiante extends JFrame {
 
         txtNombres = new JTextField();
         txtNombres.setBounds(180, 110, 431, 31);
-        txtNombres.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtNombres.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(txtNombres);
 
         lblApellido = new JLabel("Apellidos:");
-        lblApellido.setBounds(180, 150, 71, 21);
+        lblApellido.setBounds(205, 150, 71, 21);
         lblApellido.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblApellido);
 
         txtApellidos = new JTextField();
-        txtApellidos.setBounds(180, 180, 431, 31);
-        txtApellidos.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtApellidos.setBounds(205, 180, 431, 31);
+        txtApellidos.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(txtApellidos);
 
         lblCorreoElectrinico = new JLabel("Correo electronico:");
-        lblCorreoElectrinico.setBounds(180, 220, 131, 21);
+        lblCorreoElectrinico.setBounds(205, 220, 131, 21);
         lblCorreoElectrinico.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblCorreoElectrinico);
 
         txtCorreoElectronico = new JTextField();
-        txtCorreoElectronico.setBounds(180, 250, 431, 31);
-        txtCorreoElectronico.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtCorreoElectronico.setBounds(205, 250, 431, 31);
+        txtCorreoElectronico.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(txtCorreoElectronico);
 
         lblCedula = new JLabel("Cedula:");
-        lblCedula.setBounds(180, 290, 91, 21);
+        lblCedula.setBounds(205, 290, 91, 21);
         lblCedula.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblCedula);
 
         txtCedula = new JTextField();
-        txtCedula.setBounds(180, 320, 431, 31);
-        txtCedula.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtCedula.setBounds(205, 320, 431, 31);
+        txtCedula.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(txtCedula);
 
         lblCarrera = new JLabel("Carrera:");
-        lblCarrera.setBounds(180, 370, 111, 21);
+        lblCarrera.setBounds(205, 370, 111, 21);
         lblCarrera.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblCarrera);
 
         cbxCarrera = new JComboBox<>();
-        cbxCarrera.setBounds(180, 400, 431, 31);
+        cbxCarrera.setBounds(205, 400, 431, 31);
         add(cbxCarrera);
 
         lblCicloActual = new JLabel("Ciclo actual:");
-        lblCicloActual.setBounds(180, 440, 91, 21);
+        lblCicloActual.setBounds(205, 440, 91, 21);
         lblCicloActual.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblCicloActual);
 
         cbsCicloActual = new JComboBox<>();
-        cbsCicloActual.setBounds(180, 470, 431, 31);
+        cbsCicloActual.setBounds(205, 470, 431, 31);
         add(cbsCicloActual);
 
         lblContrasenia = new JLabel("Contraseña:");
-        lblContrasenia.setBounds(180, 510, 91, 21);
+        lblContrasenia.setBounds(205, 510, 91, 21);
         lblContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblContrasenia);
 
         txtContrasenia = new JPasswordField();
-        txtContrasenia.setBounds(180, 540, 431, 31);
-        txtContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtContrasenia.setBounds(205, 540, 431, 31);
+        txtContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(txtContrasenia);
 
         lblConfirmarContrasenia = new JLabel("Confirmar contraseña");
-        lblConfirmarContrasenia.setBounds(180, 580, 151, 21);
+        lblConfirmarContrasenia.setBounds(205, 580, 151, 21);
         lblConfirmarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(lblConfirmarContrasenia);
 
         txtConfirmarContrasenia = new JPasswordField();
-        txtConfirmarContrasenia.setBounds(180, 610, 431, 31);
-        txtConfirmarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtConfirmarContrasenia.setBounds(205, 610, 431, 31);
+        txtConfirmarContrasenia.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         add(txtConfirmarContrasenia);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.setBounds(330, 670, 91, 31);
+        btnCancelar.setBounds(355, 670, 91, 31);
         btnCancelar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
         add(btnCancelar);
 
-        btnGuardar = new JButton("Guardar", new ImageIcon("./iconos/person_add.png"));
-        btnGuardar.setBounds(440, 670, 171, 31);
+        btnGuardar = new JButton("Guardar", RecursoVista.icono("person_add.png"));
+        btnGuardar.setBounds(465, 670, 171, 31);
         btnGuardar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
         add(btnGuardar);
     }

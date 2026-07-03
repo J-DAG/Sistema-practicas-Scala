@@ -57,7 +57,7 @@ public class VistaMainCoordinador extends JFrame {
 
     public VistaMainCoordinador() {
         setTitle("::Menu Coordinador");
-        setSize(1200, 800);
+        setSize(1300, 840);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
@@ -69,29 +69,29 @@ public class VistaMainCoordinador extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         menuUsuarios = new JMenu("Inicio");
-        mniNotificaciones = new JMenuItem("Notificaciones", new ImageIcon("./iconos/notification.png"));
-        mniCerrarSesion = new JMenuItem("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        mniNotificaciones = new JMenuItem("Notificaciones", RecursoVista.icono("notification.png"));
+        mniCerrarSesion = new JMenuItem("Cerrar sesion", RecursoVista.icono("logout.png"));
         menuUsuarios.add(mniNotificaciones);
         menuUsuarios.add(mniCerrarSesion);
 
         menuAyuda = new JMenu("Ayuda");
-        mniAcercaDe = new JMenuItem("Acerca de", new ImageIcon("./iconos/help.png"));
+        mniAcercaDe = new JMenuItem("Acerca de", RecursoVista.icono("help.png"));
         menuAyuda.add(mniAcercaDe);
 
         menuCrear = new JMenu("Administración");
-        mniEmpresa = new JMenuItem("Empresas", new ImageIcon("./iconos/apartment.png"));
-        mniEstudiantes = new JMenuItem("Estudiantes", new ImageIcon("./iconos/account.png"));
-        mniTutores = new JMenuItem("Tutores", new ImageIcon("./iconos/school.png"));
-        mniReportes = new JMenuItem("Reportes", new ImageIcon("./iconos/stats.png"));
+        mniEmpresa = new JMenuItem("Empresas", RecursoVista.icono("apartment.png"));
+        mniEstudiantes = new JMenuItem("Estudiantes", RecursoVista.icono("account.png"));
+        mniTutores = new JMenuItem("Tutores", RecursoVista.icono("school.png"));
+        mniReportes = new JMenuItem("Reportes", RecursoVista.icono("stats.png"));
         menuCrear.add(mniEmpresa);
         menuCrear.add(mniEstudiantes);
         menuCrear.add(mniTutores);
         menuCrear.add(mniReportes);
 
         menuPracticas = new JMenu("Prácticas");
-        mniCrearOferta = new JMenuItem("Crear oferta", new ImageIcon("./iconos/forms_add.png"));
-        mniPracticas = new JMenuItem("Practicas", new ImageIcon("./iconos/work.png"));
-        mniPostulacion = new JMenuItem("Postulaciones", new ImageIcon("./iconos/forms_add.png"));
+        mniCrearOferta = new JMenuItem("Crear oferta", RecursoVista.icono("forms_add.png"));
+        mniPracticas = new JMenuItem("Practicas", RecursoVista.icono("work.png"));
+        mniPostulacion = new JMenuItem("Postulaciones", RecursoVista.icono("forms_add.png"));
         menuPracticas.add(mniCrearOferta);
         menuPracticas.add(mniPracticas);
         menuPracticas.add(mniPostulacion);
@@ -106,14 +106,30 @@ public class VistaMainCoordinador extends JFrame {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
 
-        btnEstudiantes = new JButton("Estudiantes", new ImageIcon("./iconos/account.png"));
-        btnTutores = new JButton("Tutores", new ImageIcon("./iconos/school.png"));
-        btnEmpresa = new JButton("Empresas", new ImageIcon("./iconos/apartment.png"));
-        btnPostulacion = new JButton("Postulaciones", new ImageIcon("./iconos/forms_add.png"));
-        btnReportes = new JButton("Reportes", new ImageIcon("./iconos/stats.png"));
-        btnAcercaDe = new JButton("Acerca de", new ImageIcon("./iconos/help.png"));
-        btnNotificaciones = new JButton("Notificaciones", new ImageIcon("./iconos/notification.png"));
-        btnCerrarSesion = new JButton("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        btnEstudiantes = new JButton(RecursoVista.icono("account.png"));
+        btnEstudiantes.setToolTipText("Estudiantes");
+        btnEstudiantes.setFocusable(false);
+        btnTutores = new JButton(RecursoVista.icono("school.png"));
+        btnTutores.setToolTipText("Tutores");
+        btnTutores.setFocusable(false);
+        btnEmpresa = new JButton(RecursoVista.icono("apartment.png"));
+        btnEmpresa.setToolTipText("Empresas");
+        btnEmpresa.setFocusable(false);
+        btnPostulacion = new JButton(RecursoVista.icono("forms_add.png"));
+        btnPostulacion.setToolTipText("Postulaciones");
+        btnPostulacion.setFocusable(false);
+        btnReportes = new JButton(RecursoVista.icono("stats.png"));
+        btnReportes.setToolTipText("Reportes");
+        btnReportes.setFocusable(false);
+        btnAcercaDe = new JButton(RecursoVista.icono("help.png"));
+        btnAcercaDe.setToolTipText("Acerca de");
+        btnAcercaDe.setFocusable(false);
+        btnNotificaciones = new JButton(RecursoVista.icono("notification.png"));
+        btnNotificaciones.setToolTipText("Notificaciones");
+        btnNotificaciones.setFocusable(false);
+        btnCerrarSesion = new JButton(RecursoVista.icono("logout.png"));
+        btnCerrarSesion.setToolTipText("Cerrar sesion");
+        btnCerrarSesion.setFocusable(false);
 
         toolBar.add(btnEstudiantes);
         toolBar.add(btnTutores);
@@ -133,7 +149,7 @@ public class VistaMainCoordinador extends JFrame {
         add(mainPanel, BorderLayout.CENTER);
 
         // Central widget components
-        lblIcono = new JLabel(new ImageIcon("./iconos/shield.png"));
+        lblIcono = new JLabel(RecursoVista.icono("shield.png"));
         lblIcono.setBounds(20, 20, 31, 31);
         mainPanel.add(lblIcono);
 
@@ -149,90 +165,90 @@ public class VistaMainCoordinador extends JFrame {
 
         lblInformacion = new JLabel("Panel de coordinador");
         lblInformacion.setBounds(40, 110, 141, 21);
-        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblInformacion);
 
         btnVerNotificaciones = new JButton("Ver notificaciones",
-                new ImageIcon("./iconos/notification.png"));
-        btnVerNotificaciones.setBounds(900, 30, 141, 31);
+                RecursoVista.icono("notification.png"));
+        btnVerNotificaciones.setBounds(850, 30, 170, 31);
         btnVerNotificaciones.setFont(new Font("Dialog", Font.PLAIN, 10));
         mainPanel.add(btnVerNotificaciones);
 
         btnCerrarSesion_2 = new JButton("Cerrar sesion",
-                new ImageIcon("./iconos/logout.png"));
-        btnCerrarSesion_2.setBounds(1050, 30, 111, 31);
+                RecursoVista.icono("logout.png"));
+        btnCerrarSesion_2.setBounds(1030, 30, 140, 31);
         btnCerrarSesion_2.setFont(new Font("Dialog", Font.PLAIN, 10));
         mainPanel.add(btnCerrarSesion_2);
 
         // Statistics
         lblNumEstudiantes = new JLabel("00");
-        lblNumEstudiantes.setBounds(60, 160, 61, 31);
+        lblNumEstudiantes.setBounds(110, 160, 61, 31);
         lblNumEstudiantes.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumEstudiantes);
 
         lblEstudiante = new JLabel("Estudiantes");
-        lblEstudiante.setBounds(50, 190, 71, 21);
-        lblEstudiante.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblEstudiante.setBounds(100, 190, 71, 21);
+        lblEstudiante.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblEstudiante);
 
         lblNumTA = new JLabel("00");
-        lblNumTA.setBounds(180, 160, 61, 31);
+        lblNumTA.setBounds(230, 160, 61, 31);
         lblNumTA.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumTA);
 
         lblTA = new JLabel("Tutores académicos");
-        lblTA.setBounds(140, 190, 121, 21);
-        lblTA.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblTA.setBounds(190, 190, 121, 21);
+        lblTA.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblTA);
 
         lblTE = new JLabel("00");
-        lblTE.setBounds(310, 160, 61, 31);
+        lblTE.setBounds(360, 160, 61, 31);
         lblTE.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblTE);
 
         lblTE_2 = new JLabel("Tutores empresariales");
-        lblTE_2.setBounds(270, 190, 141, 21);
-        lblTE_2.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblTE_2.setBounds(320, 190, 141, 21);
+        lblTE_2.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblTE_2);
 
         lblNumEmpresas = new JLabel("00");
-        lblNumEmpresas.setBounds(430, 160, 61, 31);
+        lblNumEmpresas.setBounds(480, 160, 61, 31);
         lblNumEmpresas.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumEmpresas);
 
         lblEmpresa = new JLabel("Empresas");
-        lblEmpresa.setBounds(420, 190, 71, 21);
-        lblEmpresa.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblEmpresa.setBounds(470, 190, 71, 21);
+        lblEmpresa.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblEmpresa);
 
         lblNumPostulaciones = new JLabel("00");
-        lblNumPostulaciones.setBounds(530, 160, 61, 31);
+        lblNumPostulaciones.setBounds(580, 160, 61, 31);
         lblNumPostulaciones.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumPostulaciones);
 
         lblPostulacion = new JLabel("Postulaciones");
-        lblPostulacion.setBounds(510, 190, 81, 21);
-        lblPostulacion.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblPostulacion.setBounds(560, 190, 81, 21);
+        lblPostulacion.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblPostulacion);
 
         lblNumPracActiva = new JLabel("00");
-        lblNumPracActiva.setBounds(640, 160, 61, 31);
+        lblNumPracActiva.setBounds(690, 160, 61, 31);
         lblNumPracActiva.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumPracActiva);
 
         lblPracticaActiva = new JLabel("Practicas activas");
-        lblPracticaActiva.setBounds(610, 190, 101, 21);
-        lblPracticaActiva.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblPracticaActiva.setBounds(660, 190, 101, 21);
+        lblPracticaActiva.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblPracticaActiva);
 
         lblRegistrosRecientes = new JLabel("Postulaciones Recientes");
-        lblRegistrosRecientes.setBounds(80, 230, 251, 31);
+        lblRegistrosRecientes.setBounds(130, 230, 251, 31);
         lblRegistrosRecientes.setFont(new Font("Dialog", Font.BOLD, 14));
         mainPanel.add(lblRegistrosRecientes);
 
         tblPostulaciones = new JTable();
         JScrollPane spPostulaciones = new JScrollPane(tblPostulaciones);
-        spPostulaciones.setBounds(80, 270, 1031, 401);
+        spPostulaciones.setBounds(130, 270, 1031, 401);
         mainPanel.add(spPostulaciones);
     }
 }

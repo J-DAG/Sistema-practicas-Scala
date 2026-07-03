@@ -25,13 +25,13 @@ public class VistaTEActividades extends JFrame {
 
     public VistaTEActividades() {
         setTitle("Lista de actividades");
-        setSize(1200, 800);
+        setSize(1250, 840);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
         getContentPane().setBackground(Color.WHITE);
 
-        lblIcono = new JLabel(new ImageIcon("./iconos/apartment.png"));
+        lblIcono = new JLabel(RecursoVista.icono("apartment.png"));
         lblIcono.setBounds(30, 30, 31, 31);
         getContentPane().add(lblIcono);
 
@@ -40,12 +40,12 @@ public class VistaTEActividades extends JFrame {
         lblTitulo.setBounds(60, 30, 191, 31);
         getContentPane().add(lblTitulo);
 
-        btnInicio = new JButton("Inicio", new ImageIcon("./iconos/home.png"));
+        btnInicio = new JButton("Inicio", RecursoVista.icono("home.png"));
         btnInicio.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnInicio.setBounds(950, 30, 111, 31);
         getContentPane().add(btnInicio);
 
-        btnRegresar = new JButton("Regresar", new ImageIcon("./iconos/logout.png"));
+        btnRegresar = new JButton("Regresar", RecursoVista.icono("logout.png"));
         btnRegresar.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnRegresar.setBounds(1070, 30, 111, 31);
         getContentPane().add(btnRegresar);
@@ -61,52 +61,52 @@ public class VistaTEActividades extends JFrame {
         getContentPane().add(lblEstudiante);
 
         lblNombresEstudianteEditar = new JLabel("nombre_estudiante");
-        lblNombresEstudianteEditar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        lblNombresEstudianteEditar.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblNombresEstudianteEditar.setBounds(140, 130, 281, 16);
         getContentPane().add(lblNombresEstudianteEditar);
 
-        lblIconoBuscar = new JLabel(new ImageIcon("./iconos/search.png"));
-        lblIconoBuscar.setBounds(70, 170, 31, 31);
+        lblIconoBuscar = new JLabel(RecursoVista.icono("search.png"));
+        lblIconoBuscar.setBounds(95, 170, 31, 31);
         getContentPane().add(lblIconoBuscar);
 
         txtBuscar = new JTextField();
-        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        txtBuscar.setBounds(100, 170, 521, 31);
+        txtBuscar.setFont(new Font("Dialog", Font.PLAIN, 11));
+        txtBuscar.setBounds(125, 170, 521, 31);
         getContentPane().add(txtBuscar);
 
-        btnBuscar = new JButton("Buscar", new ImageIcon("./iconos/search.png"));
+        btnBuscar = new JButton("Buscar", RecursoVista.icono("search.png"));
         btnBuscar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnBuscar.setBounds(630, 170, 111, 31);
+        btnBuscar.setBounds(655, 170, 111, 31);
         getContentPane().add(btnBuscar);
 
-        btnNuevaActividad = new JButton("Nueva actividad", new ImageIcon("./iconos/add_24.png"));
+        btnNuevaActividad = new JButton("Nueva actividad", RecursoVista.icono("add_24.png"));
         btnNuevaActividad.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnNuevaActividad.setBounds(750, 170, 131, 31);
+        btnNuevaActividad.setBounds(775, 170, 131, 31);
         getContentPane().add(btnNuevaActividad);
 
-        btnEditar = new JButton("Editar", new ImageIcon("./iconos/edit.png"));
+        btnEditar = new JButton("Editar", RecursoVista.icono("edit.png"));
         btnEditar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnEditar.setBounds(890, 170, 131, 31);
+        btnEditar.setBounds(915, 170, 131, 31);
         getContentPane().add(btnEditar);
 
-        btnEliminar = new JButton("Eliminar", new ImageIcon("./iconos/delete.png"));
+        btnEliminar = new JButton("Eliminar", RecursoVista.icono("delete.png"));
         btnEliminar.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnEliminar.setBounds(1030, 170, 111, 31);
+        btnEliminar.setBounds(1055, 170, 111, 31);
         getContentPane().add(btnEliminar);
 
         tblActividades = new JTable(new DefaultTableModel());
         JScrollPane scrollActividades = new JScrollPane(tblActividades);
-        scrollActividades.setBounds(60, 220, 1081, 501);
+        scrollActividades.setBounds(85, 220, 1081, 501);
         getContentPane().add(scrollActividades);
 
-        btnMarcarCompletada = new JButton("Marcar completada", new ImageIcon("./iconos/check.png"));
+        btnMarcarCompletada = new JButton("Marcar completada", RecursoVista.icono("check.png"));
         btnMarcarCompletada.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnMarcarCompletada.setBounds(730, 740, 201, 31);
+        btnMarcarCompletada.setBounds(755, 740, 201, 31);
         getContentPane().add(btnMarcarCompletada);
 
-        btnMarcarIncompletada = new JButton("Marcar incompleta", new ImageIcon("./iconos/close.png"));
+        btnMarcarIncompletada = new JButton("Marcar incompleta", RecursoVista.icono("close.png"));
         btnMarcarIncompletada.setFont(new Font("Dialog", Font.PLAIN, 10));
-        btnMarcarIncompletada.setBounds(940, 740, 201, 31);
+        btnMarcarIncompletada.setBounds(965, 740, 201, 31);
         getContentPane().add(btnMarcarIncompletada);
     }
 }

@@ -2,16 +2,9 @@ package controlador
 
 import modelo.entidades.{PostulacionResumen, Usuario}
 import modelo.repositorios.{EmpresaRepositorio, PostulacionRepositorio, PracticaRepositorio, UsuarioRepositorio}
-import vista.{
-  VistaCoordinadorEstudiante,
-  VistaCoordinadorPostulaciones,
-  VistaCoordinadorPracticas,
-  VistaCoordinadorReportes,
-  VistaCoordinadorTutores,
-  VistaMainCoordinador
-}
+import vista.VistaMainCoordinador
 
-import javax.swing.{JFrame, JOptionPane}
+import javax.swing.JOptionPane
 import javax.swing.table.DefaultTableModel
 
 class ControlVentanaCoordinador(usuario: Usuario, alCerrarSesion: () => Unit) {
@@ -40,10 +33,10 @@ class ControlVentanaCoordinador(usuario: Usuario, alCerrarSesion: () => Unit) {
   vista.mniTutores.addActionListener(_ => abrirTutores())
   vista.btnPostulacion.addActionListener(_ => abrirPostulaciones())
   vista.mniPostulacion.addActionListener(_ => abrirPostulaciones())
-  vista.btnReportes.addActionListener(_ => abrirPanel(new VistaCoordinadorReportes()))
-  vista.mniReportes.addActionListener(_ => abrirPanel(new VistaCoordinadorReportes()))
+  vista.btnReportes.addActionListener(_ => abrirReportes())
+  vista.mniReportes.addActionListener(_ => abrirReportes())
   vista.mniCrearOferta.addActionListener(_ => abrirOfertas())
-  vista.mniPracticas.addActionListener(_ => abrirPanel(new VistaCoordinadorPracticas()))
+  vista.mniPracticas.addActionListener(_ => abrirPracticas())
 
   def mostrar(): Unit = {
     cargarDatos()
@@ -87,12 +80,6 @@ class ControlVentanaCoordinador(usuario: Usuario, alCerrarSesion: () => Unit) {
     vista.tblPostulaciones.setModel(modelo)
   }
 
-  private def abrirPanel(panel: JFrame): Unit = {
-    JOptionPane.showMessageDialog(vista, "Esta ventana ya esta importada. La logica interna se conectara en el siguiente paso.")
-    panel.setLocationRelativeTo(vista)
-    panel.setVisible(true)
-  }
-
   private def abrirEmpresas(): Unit = {
     vista.dispose()
     new ControlCoordinadorEmpresas(usuario, () => new ControlVentanaCoordinador(usuario, alCerrarSesion).mostrar(), alCerrarSesion).mostrar()
@@ -118,8 +105,18 @@ class ControlVentanaCoordinador(usuario: Usuario, alCerrarSesion: () => Unit) {
     new ControlCoordinadorPostulaciones(usuario, () => new ControlVentanaCoordinador(usuario, alCerrarSesion).mostrar(), alCerrarSesion).mostrar()
   }
 
+  private def abrirPracticas(): Unit = {
+    vista.dispose()
+    new ControlCoordinadorPracticas(usuario, () => new ControlVentanaCoordinador(usuario, alCerrarSesion).mostrar(), alCerrarSesion).mostrar()
+  }
+
+  private def abrirReportes(): Unit = {
+    vista.dispose()
+    new ControlCoordinadorReportes(usuario, () => new ControlVentanaCoordinador(usuario, alCerrarSesion).mostrar(), alCerrarSesion).mostrar()
+  }
+
   private def verNotificaciones(): Unit =
-    JOptionPane.showMessageDialog(vista, "Las notificaciones del coordinador se conectaran con el repositorio de notificaciones.")
+    DialogoNotificaciones.mostrar(vista, usuario)
 
   private def acercaDe(): Unit =
     JOptionPane.showMessageDialog(vista, "Sistema de gestion de practicas preprofesionales.")

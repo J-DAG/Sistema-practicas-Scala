@@ -58,6 +58,11 @@ class ControlTEActividades(usuario: Usuario, practica: PracticaResumen, alRegres
   }
 
   private def nuevaActividad(): Unit = {
+    if (horasPlanificadasActuales() >= 240) {
+      JOptionPane.showMessageDialog(vista, "La practica ya tiene 240 horas planificadas. No se pueden registrar mas actividades.")
+      return
+    }
+
     val formulario = new VistaRegistrarActividad()
     formulario.sbxHoras.setValue(1)
     formulario.btnCancelar.addActionListener(_ => formulario.dispose())
@@ -86,6 +91,11 @@ class ControlTEActividades(usuario: Usuario, practica: PracticaResumen, alRegres
   private def editarActividad(): Unit = {
     actividadSeleccionada() match {
       case Some(actividad) =>
+        if (!actividad.puedeEditar) {
+          JOptionPane.showMessageDialog(vista, "Solo se pueden editar actividades pendientes o negadas. Las actividades aprobadas o completadas no se pueden modificar.")
+          return
+        }
+
         val formulario = new VistaEditarActividad()
         formulario.txtDescripcion.setText(actividad.descripcion)
         formulario.sbxHoras.setValue(actividad.horas)
@@ -117,6 +127,11 @@ class ControlTEActividades(usuario: Usuario, practica: PracticaResumen, alRegres
   private def eliminarActividad(): Unit = {
     actividadSeleccionada() match {
       case Some(actividad) =>
+        if (!actividad.puedeEliminar) {
+          JOptionPane.showMessageDialog(vista, "Solo se pueden eliminar actividades pendientes de aprobacion.")
+          return
+        }
+
         val respuesta = JOptionPane.showConfirmDialog(
           vista,
           "Desea eliminar la actividad seleccionada?",
@@ -139,6 +154,11 @@ class ControlTEActividades(usuario: Usuario, practica: PracticaResumen, alRegres
   private def marcarCompletada(): Unit = {
     actividadSeleccionada() match {
       case Some(actividad) =>
+        if (!actividad.aprobadaPorTutorAcademico || !actividad.estado.equalsIgnoreCase("aprobada")) {
+          JOptionPane.showMessageDialog(vista, "Solo se pueden completar actividades aprobadas por el tutor academico.")
+          return
+        }
+
         val respuesta = JOptionPane.showConfirmDialog(
           vista,
           "Desea marcar esta actividad como completada?",
@@ -161,6 +181,11 @@ class ControlTEActividades(usuario: Usuario, practica: PracticaResumen, alRegres
   private def marcarPendiente(): Unit = {
     actividadSeleccionada() match {
       case Some(actividad) =>
+        if (!actividad.completadaPorTutorEmpresarial) {
+          JOptionPane.showMessageDialog(vista, "Solo se pueden marcar como pendientes las actividades completadas.")
+          return
+        }
+
         val respuesta = JOptionPane.showConfirmDialog(
           vista,
           "Desea marcar esta actividad nuevamente como pendiente?",
@@ -195,6 +220,13 @@ class ControlTEActividades(usuario: Usuario, practica: PracticaResumen, alRegres
       }
     }
   }
+
+  private def horasPlanificadasActuales(): Int =
+    actividades
+      .listarPorPractica(practica.idPractica)
+      .filterNot(_.estado.equalsIgnoreCase("negada"))
+      .map(_.horas)
+      .sum
 
   private def regresar(): Unit = {
     vista.dispose()

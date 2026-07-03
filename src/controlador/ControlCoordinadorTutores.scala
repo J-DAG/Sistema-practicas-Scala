@@ -36,9 +36,9 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
   vista.btnEmpresa.addActionListener(_ => abrirEmpresas())
   vista.btnEstudiantes.addActionListener(_ => abrirEstudiantes())
   vista.btnOfertas.addActionListener(_ => abrirOfertas())
-  vista.btnPracticas.addActionListener(_ => moduloPendiente("Practicas"))
+  vista.btnPracticas.addActionListener(_ => abrirPracticas())
   vista.btnPostulaciones.addActionListener(_ => abrirPostulaciones())
-  vista.btnReportes.addActionListener(_ => moduloPendiente("Reportes"))
+  vista.btnReportes.addActionListener(_ => abrirReportes())
 
   def mostrar(): Unit = {
     cargarDatos()
@@ -206,16 +206,29 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
     }
 
     val idUsuario = vista.tblTutores.getValueAt(fila, 0).toString.toLong
+    val tutor = usuarios.buscarPorId(idUsuario) match {
+      case Some(usuario) => usuario
+      case None =>
+        JOptionPane.showMessageDialog(vista, "No se encontro el tutor seleccionado.")
+        return
+    }
+
+    val idReemplazo = reemplazoSiAplica(tutor) match {
+      case Some(resultado) => resultado
+      case None => return
+    }
+
     val respuesta = JOptionPane.showConfirmDialog(
       vista,
-      "Si el tutor tiene practicas relacionadas, debera reasignarse antes de eliminar. Desea continuar?",
+      "Esta accion eliminara el tutor de la base de datos. Desea continuar?",
       "Confirmar eliminacion",
       JOptionPane.YES_NO_OPTION
     )
 
     if (respuesta == JOptionPane.YES_OPTION) {
       try {
-        usuarios.eliminar(idUsuario)
+        usuarios.eliminarConReasignacion(idUsuario, idReemplazo)
+        JOptionPane.showMessageDialog(vista, "Tutor eliminado correctamente.")
         cargarDatos()
       } catch {
         case error: SQLException =>
@@ -223,6 +236,39 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
         case error: Exception =>
           JOptionPane.showMessageDialog(vista, s"No se pudo eliminar el tutor.\n\nDetalle: ${error.getMessage}")
       }
+    }
+  }
+
+  private def reemplazoSiAplica(tutor: Usuario): Option[Option[Long]] = {
+    if (!usuarios.requiereReasignacionTutor(tutor.idUsuario)) {
+      return Some(None)
+    }
+
+    val candidatos = usuarios.candidatosReemplazoTutor(tutor.idUsuario)
+    if (candidatos.isEmpty) {
+      val tipo =
+        if (tutor.rol.equalsIgnoreCase("tutor_academico")) "academico"
+        else "empresarial de la misma empresa"
+      JOptionPane.showMessageDialog(vista, s"No existe un tutor $tipo activo de reemplazo. Cree uno antes de eliminar.")
+      return None
+    }
+
+    val opciones = candidatos.map(reemplazo => s"${reemplazo.idUsuario} - ${reemplazo.nombreCompleto}").toArray
+    val seleccion = JOptionPane.showInputDialog(
+      vista,
+      "El tutor tiene practicas relacionadas. Seleccione el tutor de reemplazo:",
+      "Reasignar tutor",
+      JOptionPane.QUESTION_MESSAGE,
+      null,
+      opciones.asInstanceOf[Array[AnyRef]],
+      opciones.head
+    )
+
+    if (seleccion == null) {
+      None
+    } else {
+      val indice = opciones.indexOf(seleccion.toString)
+      candidatos.lift(indice).map(reemplazo => Some(reemplazo.idUsuario))
     }
   }
 
@@ -363,8 +409,15 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
     new ControlCoordinadorPostulaciones(usuarioSesion, alInicio, alCerrarSesion).mostrar()
   }
 
-  private def moduloPendiente(nombre: String): Unit =
-    JOptionPane.showMessageDialog(vista, s"El modulo de $nombre se conectara en el siguiente paso.")
+  private def abrirPracticas(): Unit = {
+    vista.dispose()
+    new ControlCoordinadorPracticas(usuarioSesion, alInicio, alCerrarSesion).mostrar()
+  }
+
+  private def abrirReportes(): Unit = {
+    vista.dispose()
+    new ControlCoordinadorReportes(usuarioSesion, alInicio, alCerrarSesion).mostrar()
+  }
 
   private def volverInicio(): Unit = {
     vista.dispose()

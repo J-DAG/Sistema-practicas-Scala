@@ -1,13 +1,98 @@
 package modelo.repositorios
 
 import modelo.bd.Conexion
-import modelo.entidades.{PracticaEstudianteDetalle, PracticaResumen}
+import modelo.entidades.{PracticaCoordinadorResumen, PracticaEstudianteDetalle, PracticaResumen}
 
 import java.sql.Connection
 import java.sql.ResultSet
 import scala.util.Using
 
 class PracticaRepositorio {
+
+  def listarCoordinador(filtro: String = ""): List[PracticaCoordinadorResumen] = {
+    val sql =
+      """
+        |SELECT
+        |  p.id_practica,
+        |  p.id_estudiante,
+        |  est.nombres || ' ' || est.apellidos AS estudiante,
+        |  est.cedula,
+        |  e.nombre AS empresa,
+        |  o.titulo AS oferta,
+        |  o.area,
+        |  ta.nombres || ' ' || ta.apellidos AS tutor_academico,
+        |  te.nombres || ' ' || te.apellidos AS tutor_empresarial,
+        |  p.fecha_inicio,
+        |  p.fecha_fin,
+        |  p.estado,
+        |  p.horas_cumplidas,
+        |  p.calificacion
+        |FROM practicas p
+        |JOIN usuarios est ON est.id_usuario = p.id_estudiante
+        |JOIN empresas e ON e.id_empresa = p.id_empresa
+        |JOIN postulaciones po ON po.id_postulacion = p.id_postulacion
+        |JOIN ofertas o ON o.id_oferta = po.id_oferta
+        |JOIN usuarios ta ON ta.id_usuario = p.id_tutor_academico
+        |JOIN usuarios te ON te.id_usuario = p.id_tutor_empresarial
+        |WHERE
+        |  ? = ''
+        |  OR LOWER(est.nombres || ' ' || est.apellidos) LIKE ?
+        |  OR LOWER(est.cedula) LIKE ?
+        |  OR LOWER(e.nombre) LIKE ?
+        |  OR LOWER(o.titulo) LIKE ?
+        |  OR LOWER(o.area) LIKE ?
+        |  OR LOWER(ta.nombres || ' ' || ta.apellidos) LIKE ?
+        |  OR LOWER(te.nombres || ' ' || te.apellidos) LIKE ?
+        |  OR LOWER(p.estado) LIKE ?
+        |ORDER BY p.fecha_inicio DESC, p.id_practica DESC
+        |""".stripMargin
+    val busqueda = filtro.trim.toLowerCase
+    val patron = s"%$busqueda%"
+
+    Using.Manager { use =>
+      val conexion = use(Conexion.obtener())
+      val sentencia = use(conexion.prepareStatement(sql))
+      sentencia.setString(1, busqueda)
+      sentencia.setString(2, patron)
+      sentencia.setString(3, patron)
+      sentencia.setString(4, patron)
+      sentencia.setString(5, patron)
+      sentencia.setString(6, patron)
+      sentencia.setString(7, patron)
+      sentencia.setString(8, patron)
+      sentencia.setString(9, patron)
+      val resultado = use(sentencia.executeQuery())
+      val practicas = List.newBuilder[PracticaCoordinadorResumen]
+
+      while (resultado.next()) {
+        practicas += mapearCoordinador(resultado)
+      }
+
+      practicas.result()
+    }.get
+  }
+
+  def contarEstados(): Map[String, Int] = {
+    val sql =
+      """
+        |SELECT LOWER(estado) AS estado, COUNT(*) AS total
+        |FROM practicas
+        |GROUP BY LOWER(estado)
+        |""".stripMargin
+
+    Using.Manager { use =>
+      val conexion = use(Conexion.obtener())
+      val sentencia = use(conexion.prepareStatement(sql))
+      val resultado = use(sentencia.executeQuery())
+      val conteos = Map.newBuilder[String, Int]
+
+      while (resultado.next()) {
+        conteos += resultado.getString("estado") -> resultado.getInt("total")
+      }
+
+      conteos.result()
+    }.get
+  }
 
   def contarPorEstado(estado: String): Int = {
     val sql = "SELECT COUNT(*) FROM practicas WHERE LOWER(estado) = LOWER(?)"
@@ -235,7 +320,7 @@ class PracticaRepositorio {
         sentencia.close()
       }
 
-      notificar(conexion, detalle.idEstudiante, "Practica calificada", s"Tu practica '${detalle.oferta}' fue calificada con $calificacion/100. Formularios finales enviados.")
+      notificar(conexion, detalle.idEstudiante, "Formulario 2 disponible", s"Tu practica '${detalle.oferta}' fue calificada con $calificacion/100. El Formulario 2 final fue enviado a tu correo y esta disponible en Mis formularios.")
       notificar(conexion, detalle.idTutorEmpresarial, "Practica calificada", s"La practica '${detalle.oferta}' de ${detalle.estudiante} fue calificada con $calificacion/100.")
       detalle.idCoordinador.foreach { id =>
         notificar(conexion, id, "Practica calificada", s"La practica '${detalle.oferta}' de ${detalle.estudiante} fue calificada con $calificacion/100.")
@@ -362,6 +447,24 @@ class PracticaRepositorio {
       tutorEmpresarial = resultado.getString("tutor_empresarial"),
       calificacion = obtenerIntOpcional(resultado, "calificacion"),
       formulariosFinalesEnviados = resultado.getBoolean("formularios_finales_enviados")
+    )
+
+  private def mapearCoordinador(resultado: ResultSet): PracticaCoordinadorResumen =
+    PracticaCoordinadorResumen(
+      idPractica = resultado.getLong("id_practica"),
+      idEstudiante = resultado.getLong("id_estudiante"),
+      estudiante = resultado.getString("estudiante"),
+      cedula = resultado.getString("cedula"),
+      empresa = resultado.getString("empresa"),
+      oferta = resultado.getString("oferta"),
+      area = resultado.getString("area"),
+      tutorAcademico = resultado.getString("tutor_academico"),
+      tutorEmpresarial = resultado.getString("tutor_empresarial"),
+      fechaInicio = resultado.getDate("fecha_inicio").toLocalDate,
+      fechaFin = resultado.getDate("fecha_fin").toLocalDate,
+      estado = resultado.getString("estado"),
+      horasCumplidas = resultado.getInt("horas_cumplidas"),
+      calificacion = obtenerIntOpcional(resultado, "calificacion")
     )
 
   private def mapearResumen(resultado: ResultSet): PracticaResumen =

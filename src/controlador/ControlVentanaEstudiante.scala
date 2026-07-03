@@ -82,9 +82,6 @@ class ControlVentanaEstudiante(usuario: Usuario, alCerrarSesion: () => Unit) {
     new ControlEstudianteFormularios(usuario, () => new ControlVentanaEstudiante(usuario, alCerrarSesion).mostrar(), alCerrarSesion).mostrar()
   }
 
-  private def moduloPendiente(nombre: String): Unit =
-    JOptionPane.showMessageDialog(vista, s"El modulo de $nombre se conectara en el siguiente paso.")
-
   private def cerrarSesion(): Unit = {
     vista.dispose()
     alCerrarSesion()

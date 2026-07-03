@@ -39,7 +39,7 @@ public class VistaMainTutorEmpresarial extends JFrame {
 
     public VistaMainTutorEmpresarial() {
         setTitle("::Menu de tutor empresarial");
-        setSize(1200, 800);
+        setSize(1250, 840);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
@@ -51,14 +51,14 @@ public class VistaMainTutorEmpresarial extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         menuInicio = new JMenu("Inicio");
-        mniNotificaciones = new JMenuItem("Notificaciones", new ImageIcon("./iconos/notification.png"));
-        mniCerrarSesion = new JMenuItem("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        mniNotificaciones = new JMenuItem("Notificaciones", RecursoVista.icono("notification.png"));
+        mniCerrarSesion = new JMenuItem("Cerrar sesion", RecursoVista.icono("logout.png"));
         menuInicio.add(mniNotificaciones);
         menuInicio.add(mniCerrarSesion);
 
         menuPracticas = new JMenu("Practicas");
-        mniEnProgreso = new JMenuItem("En progreso", new ImageIcon("./iconos/hourglass_top.png"));
-        mniCompletadas = new JMenuItem("Completadas", new ImageIcon("./iconos/check_circle.png"));
+        mniEnProgreso = new JMenuItem("En progreso", RecursoVista.icono("hourglass_top.png"));
+        mniCompletadas = new JMenuItem("Completadas", RecursoVista.icono("check_circle.png"));
         menuPracticas.add(mniEnProgreso);
         menuPracticas.add(mniCompletadas);
 
@@ -70,10 +70,18 @@ public class VistaMainTutorEmpresarial extends JFrame {
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
 
-        btnCompletadas = new JButton("Completadas", new ImageIcon("./iconos/check_circle.png"));
-        btnEnProgreso = new JButton("En progreso", new ImageIcon("./iconos/hourglass_top.png"));
-        btnNotificaciones = new JButton("Notificaciones", new ImageIcon("./iconos/notification.png"));
-        btnCerrarSesion = new JButton("Cerrar sesion", new ImageIcon("./iconos/logout.png"));
+        btnCompletadas = new JButton(RecursoVista.icono("check_circle.png"));
+        btnCompletadas.setToolTipText("Completadas");
+        btnCompletadas.setFocusable(false);
+        btnEnProgreso = new JButton(RecursoVista.icono("hourglass_top.png"));
+        btnEnProgreso.setToolTipText("En progreso");
+        btnEnProgreso.setFocusable(false);
+        btnNotificaciones = new JButton(RecursoVista.icono("notification.png"));
+        btnNotificaciones.setToolTipText("Notificaciones");
+        btnNotificaciones.setFocusable(false);
+        btnCerrarSesion = new JButton(RecursoVista.icono("logout.png"));
+        btnCerrarSesion.setToolTipText("Cerrar sesion");
+        btnCerrarSesion.setFocusable(false);
 
         toolBar.add(btnCompletadas);
         toolBar.add(btnEnProgreso);
@@ -90,18 +98,18 @@ public class VistaMainTutorEmpresarial extends JFrame {
 
         // Central widget components
         btnVerNotificaciones = new JButton("Ver notificaciones",
-                new ImageIcon("./iconos/notification.png"));
-        btnVerNotificaciones.setBounds(920, 20, 141, 31);
+                RecursoVista.icono("notification.png"));
+        btnVerNotificaciones.setBounds(860, 30, 170, 31);
         btnVerNotificaciones.setFont(new Font("Dialog", Font.PLAIN, 10));
         mainPanel.add(btnVerNotificaciones);
 
         btnCerrarSesion_2 = new JButton("Cerrar sesion",
-                new ImageIcon("./iconos/logout.png"));
-        btnCerrarSesion_2.setBounds(1070, 20, 111, 31);
+                RecursoVista.icono("logout.png"));
+        btnCerrarSesion_2.setBounds(1040, 30, 140, 31);
         btnCerrarSesion_2.setFont(new Font("Dialog", Font.PLAIN, 10));
         mainPanel.add(btnCerrarSesion_2);
 
-        lblIcono = new JLabel(new ImageIcon("./iconos/apartment.png"));
+        lblIcono = new JLabel(RecursoVista.icono("apartment.png"));
         lblIcono.setBounds(20, 20, 31, 31);
         mainPanel.add(lblIcono);
 
@@ -117,47 +125,47 @@ public class VistaMainTutorEmpresarial extends JFrame {
 
         lblInformacion = new JLabel("Panel de tutor empresarial");
         lblInformacion.setBounds(40, 110, 461, 21);
-        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblInformacion.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblInformacion);
 
         lblNumEstudiantesEditar = new JLabel("00");
-        lblNumEstudiantesEditar.setBounds(60, 160, 61, 31);
+        lblNumEstudiantesEditar.setBounds(85, 160, 61, 31);
         lblNumEstudiantesEditar.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumEstudiantesEditar);
 
         lblEstudiante = new JLabel("Estudiantes");
-        lblEstudiante.setBounds(50, 190, 71, 21);
-        lblEstudiante.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblEstudiante.setBounds(75, 190, 71, 21);
+        lblEstudiante.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblEstudiante);
 
         lblNumPracticasProgresoEditar = new JLabel("00");
-        lblNumPracticasProgresoEditar.setBounds(180, 160, 61, 31);
+        lblNumPracticasProgresoEditar.setBounds(205, 160, 61, 31);
         lblNumPracticasProgresoEditar.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumPracticasProgresoEditar);
 
         lblPracticaProgreso = new JLabel("Practicas en progreso");
-        lblPracticaProgreso.setBounds(140, 190, 131, 21);
-        lblPracticaProgreso.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblPracticaProgreso.setBounds(165, 190, 131, 21);
+        lblPracticaProgreso.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblPracticaProgreso);
 
         lblNumPracComprelatasEditar = new JLabel("00");
-        lblNumPracComprelatasEditar.setBounds(310, 160, 61, 31);
+        lblNumPracComprelatasEditar.setBounds(335, 160, 61, 31);
         lblNumPracComprelatasEditar.setFont(new Font("Dialog", Font.PLAIN, 20));
         mainPanel.add(lblNumPracComprelatasEditar);
 
         lblPracticaCompletadas = new JLabel("Practicas completas");
-        lblPracticaCompletadas.setBounds(280, 190, 121, 21);
-        lblPracticaCompletadas.setFont(new Font("Dialog", Font.PLAIN, 10));
+        lblPracticaCompletadas.setBounds(305, 190, 121, 21);
+        lblPracticaCompletadas.setFont(new Font("Dialog", Font.PLAIN, 11));
         mainPanel.add(lblPracticaCompletadas);
 
         lblRegistrosRecientes = new JLabel("Lista de estudiantes asignados");
-        lblRegistrosRecientes.setBounds(40, 250, 331, 31);
+        lblRegistrosRecientes.setBounds(65, 250, 331, 31);
         lblRegistrosRecientes.setFont(new Font("Dialog", Font.BOLD, 14));
         mainPanel.add(lblRegistrosRecientes);
 
         tblEstudiantes = new JTable();
         JScrollPane spEstudiantes = new JScrollPane(tblEstudiantes);
-        spEstudiantes.setBounds(30, 290, 1131, 401);
+        spEstudiantes.setBounds(55, 290, 1131, 401);
         mainPanel.add(spEstudiantes);
     }
 }

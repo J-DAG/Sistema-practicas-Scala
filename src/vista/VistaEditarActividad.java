@@ -15,7 +15,7 @@ public class VistaEditarActividad extends JFrame {
 
     public VistaEditarActividad() {
         setTitle("Editar informacion de actividad");
-        setSize(500, 225);
+        setSize(560, 265);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -32,7 +32,7 @@ public class VistaEditarActividad extends JFrame {
         getContentPane().add(lblDescripcion);
 
         txtDescripcion = new JTextField();
-        txtDescripcion.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        txtDescripcion.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         txtDescripcion.setBounds(150, 70, 321, 31);
         getContentPane().add(txtDescripcion);
 
@@ -42,18 +42,18 @@ public class VistaEditarActividad extends JFrame {
         getContentPane().add(lblHoras);
 
         sbxHoras = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-        sbxHoras.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        sbxHoras.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         sbxHoras.setBounds(150, 110, 101, 31);
         getContentPane().add(sbxHoras);
 
         btnCancelar = new JButton("Cancelar");
         btnCancelar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnCancelar.setBounds(140, 160, 91, 31);
+        btnCancelar.setBounds(170, 160, 91, 31);
         getContentPane().add(btnCancelar);
 
-        btnGuardar = new JButton("Guardar", new ImageIcon("./iconos/save.png"));
+        btnGuardar = new JButton("Guardar", RecursoVista.icono("save.png"));
         btnGuardar.setFont(new Font("Segoe UI", Font.PLAIN, 10));
-        btnGuardar.setBounds(260, 160, 101, 31);
+        btnGuardar.setBounds(290, 160, 101, 31);
         getContentPane().add(btnGuardar);
     }
 }

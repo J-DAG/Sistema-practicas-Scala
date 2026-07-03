@@ -77,7 +77,7 @@ class ControlVentanaTE(usuario: Usuario, alCerrarSesion: () => Unit) {
   }
 
   private def verNotificaciones(): Unit =
-    JOptionPane.showMessageDialog(vista, "El panel de notificaciones del tutor empresarial se conectara en el siguiente paso.")
+    DialogoNotificaciones.mostrar(vista, usuario)
 
   private def cerrarSesion(): Unit = {
     vista.dispose()

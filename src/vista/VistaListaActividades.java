@@ -22,7 +22,7 @@ public class VistaListaActividades extends JFrame {
 
     public VistaListaActividades() {
         setTitle("Lista de actividades");
-        setSize(800, 700);
+        setSize(850, 740);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(null);
