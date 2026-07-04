@@ -1,6 +1,7 @@
 package controlador
 
 import modelo.entidades.{EstudianteResumen, Usuario}
+import modelo.reportes.AnalisisReportes
 import modelo.repositorios.UsuarioRepositorio
 import vista.VistaCoordinadorEstudiante
 
@@ -66,9 +67,8 @@ class ControlCoordinadorEstudiantes(usuarioSesion: Usuario, alInicio: () => Unit
   }
 
   private def cargarResumen(estudiantes: List[EstudianteResumen]): Unit = {
+    val segmentos = AnalisisReportes.resumenEstudiantes(estudiantes)
     val total = estudiantes.size
-    val conteos = estudiantes.groupBy(_.estadoPractica).view.mapValues(_.size).toMap
-    val estados = List("En practica", "Aprobado", "Postulando", "Sin actividad")
 
     vista.widgetGraficoPastel.removeAll()
     vista.widgetGraficoPastel.setBorder(BorderFactory.createTitledBorder("Estado de aplicacion"))
@@ -76,12 +76,10 @@ class ControlCoordinadorEstudiantes(usuarioSesion: Usuario, alInicio: () => Unit
     val panel = new JPanel(new GridLayout(0, 1, 6, 6))
     panel.setBackground(Color.WHITE)
 
-    estados.foreach { estado =>
-      val cantidad = conteos.getOrElse(estado, 0)
-      val porcentaje = if (total == 0) 0 else Math.round((cantidad.toDouble / total.toDouble) * 100)
-      val etiqueta = new JLabel(f"$estado: $cantidad%d ($porcentaje%d%%)", SwingConstants.CENTER)
+    segmentos.foreach { segmento =>
+      val etiqueta = new JLabel(segmento.texto, SwingConstants.CENTER)
       etiqueta.setOpaque(true)
-      etiqueta.setBackground(colorEstado(estado))
+      etiqueta.setBackground(colorEstado(segmento.clave))
       etiqueta.setForeground(Color.WHITE)
       etiqueta.setFont(new Font("Dialog", Font.BOLD, 14))
       panel.add(etiqueta)
@@ -100,7 +98,8 @@ class ControlCoordinadorEstudiantes(usuarioSesion: Usuario, alInicio: () => Unit
   private def colorEstado(estado: String): Color =
     estado match {
       case "En practica" => new Color(54, 117, 181)
-      case "Aprobado" => new Color(48, 140, 92)
+      case "Finalizada" => new Color(181, 132, 42)
+      case "Completada" => new Color(48, 140, 92)
       case "Postulando" => new Color(181, 132, 42)
       case _ => new Color(110, 110, 110)
     }

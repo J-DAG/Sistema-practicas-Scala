@@ -1,8 +1,9 @@
 package controlador
 
-import modelo.entidades.{TutorResumen, Usuario, UsuarioFactory}
+import controlador.util.ModelosTabla
+import modelo.entidades.{TutorResumen, Usuario}
 import modelo.repositorios.{EmpresaRepositorio, UsuarioRepositorio}
-import modelo.validaciones.CedulaEcuador
+import modelo.servicios.{DatosUsuarioFormulario, UsuarioFormularioServicio}
 import vista.{
   VistaCoordinadorTutores,
   VistaCrearCuentaTutorAcademico,
@@ -13,7 +14,6 @@ import vista.{
 
 import java.sql.SQLException
 import javax.swing.{JComboBox, JOptionPane}
-import javax.swing.table.DefaultTableModel
 
 class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, alCerrarSesion: () => Unit) {
   private val vista = new VistaCoordinadorTutores()
@@ -55,28 +55,8 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
     }
   }
 
-  private def llenarTabla(datos: List[TutorResumen]): Unit = {
-    val modelo = new DefaultTableModel(Array[AnyRef]("ID", "Nombres", "Apellidos", "Cedula", "Email", "Rol", "Carrera", "Empresa", "Cargo", "Activo"), 0) {
-      override def isCellEditable(row: Int, column: Int): Boolean = false
-    }
-
-    datos.foreach { tutor =>
-      modelo.addRow(Array[AnyRef](
-        Long.box(tutor.idUsuario),
-        tutor.nombres,
-        tutor.apellidos,
-        tutor.cedula,
-        tutor.email,
-        tutor.rol,
-        tutor.carrera.getOrElse(""),
-        tutor.empresa.getOrElse(""),
-        tutor.cargo.getOrElse(""),
-        Boolean.box(tutor.activo)
-      ))
-    }
-
-    vista.tblTutores.setModel(modelo)
-  }
+  private def llenarTabla(datos: List[TutorResumen]): Unit =
+    vista.tblTutores.setModel(ModelosTabla.tutores(datos))
 
   private def nuevoTutorAcademico(): Unit = {
     val formulario = new VistaCrearCuentaTutorAcademico()
@@ -283,8 +263,10 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
       confirmar: String,
       passwordActual: String
   ): Option[Usuario] =
-    leerUsuarioBase(idUsuario, nombres, apellidos, email, cedula, "tutor_academico", password, confirmar, passwordActual)
-      .map(usuario => UsuarioFactory.especializar(usuario.copy(carrera = carrera)))
+    resultadoUsuario(UsuarioFormularioServicio.tutorAcademico(
+      datosUsuario(idUsuario, nombres, apellidos, email, cedula, "tutor_academico", password, confirmar, passwordActual),
+      carrera
+    ))
 
   private def leerTutorEmpresarial(
       idUsuario: Long,
@@ -297,20 +279,14 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
       password: String,
       confirmar: String,
       passwordActual: String
-  ): Option[Usuario] = {
-    if (idEmpresa.isEmpty) {
-      JOptionPane.showMessageDialog(vista, "Debe seleccionar una empresa.")
-      None
-    } else if (cargo.trim.isEmpty) {
-      JOptionPane.showMessageDialog(vista, "Ingrese el cargo del tutor empresarial.")
-      None
-    } else {
-      leerUsuarioBase(idUsuario, nombres, apellidos, email, cedula, "tutor_empresarial", password, confirmar, passwordActual)
-        .map(usuario => UsuarioFactory.especializar(usuario.copy(idEmpresa = idEmpresa, cargo = Some(cargo.trim))))
-    }
-  }
+  ): Option[Usuario] =
+    resultadoUsuario(UsuarioFormularioServicio.tutorEmpresarial(
+      datosUsuario(idUsuario, nombres, apellidos, email, cedula, "tutor_empresarial", password, confirmar, passwordActual),
+      idEmpresa,
+      cargo
+    ))
 
-  private def leerUsuarioBase(
+  private def datosUsuario(
       idUsuario: Long,
       nombres: String,
       apellidos: String,
@@ -320,36 +296,17 @@ class ControlCoordinadorTutores(usuarioSesion: Usuario, alInicio: () => Unit, al
       password: String,
       confirmar: String,
       passwordActual: String
-  ): Option[Usuario] = {
-    val datos = List(nombres, apellidos, email, cedula).map(_.trim)
-    if (datos.exists(_.isEmpty)) {
-      JOptionPane.showMessageDialog(vista, "Complete todos los campos obligatorios.")
-      None
-    } else if (!datos(2).contains("@")) {
-      JOptionPane.showMessageDialog(vista, "Ingrese un correo electronico valido.")
-      None
-    } else if (!CedulaEcuador.esValida(datos(3))) {
-      JOptionPane.showMessageDialog(vista, "Ingrese una cedula ecuatoriana valida.")
-      None
-    } else if (idUsuario == 0L && password.isEmpty) {
-      JOptionPane.showMessageDialog(vista, "Ingrese una contrasenia.")
-      None
-    } else if (password != confirmar) {
-      JOptionPane.showMessageDialog(vista, "Las contrasenias no coinciden.")
-      None
-    } else {
-      Some(UsuarioFactory.crear(
-        idUsuario = idUsuario,
-        nombres = datos(0),
-        apellidos = datos(1),
-        cedula = datos(3),
-        email = datos(2),
-        passwordHash = if (password.nonEmpty) password else passwordActual,
-        rol = rol,
-        activo = true
-      ))
-    }
-  }
+  ): DatosUsuarioFormulario =
+    DatosUsuarioFormulario(idUsuario, nombres, apellidos, email, cedula, rol, password, confirmar, passwordActual)
+
+  private def resultadoUsuario(resultado: Either[String, Usuario]): Option[Usuario] =
+    resultado.fold(
+      mensaje => {
+        JOptionPane.showMessageDialog(vista, mensaje)
+        None
+      },
+      Some(_)
+    )
 
   private def guardarNuevo(ventana: java.awt.Window, usuario: Usuario): Unit = {
     try {

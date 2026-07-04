@@ -9,6 +9,7 @@ import java.sql.ResultSet
 import scala.util.Using
 
 class PostulacionRepositorio {
+  private val CicloMinimoPostulacion = 6
 
   def crear(idEstudiante: Long, idOferta: Long, rutaDocumentoMalla: String): Long = {
     validarEstudiantePuedePostular(idEstudiante)
@@ -33,6 +34,8 @@ class PostulacionRepositorio {
   }
 
   private def validarEstudiantePuedePostular(idEstudiante: Long): Unit = {
+    validarCicloPermitido(idEstudiante)
+
     val sql =
       """
         |SELECT COUNT(*)
@@ -49,6 +52,49 @@ class PostulacionRepositorio {
 
       if (resultado.next() && resultado.getInt(1) > 0) {
         throw new IllegalStateException("El estudiante ya tiene o ya completo una practica, no puede enviar nuevas postulaciones.")
+      }
+    }.get
+  }
+
+  private def validarCicloPermitido(idEstudiante: Long): Unit = {
+    val sql =
+      """
+        |SELECT rol, activo, ciclo_actual
+        |FROM usuarios
+        |WHERE id_usuario = ?
+        |""".stripMargin
+
+    Using.Manager { use =>
+      val conexion = use(Conexion.obtener())
+      val sentencia = use(conexion.prepareStatement(sql))
+      sentencia.setLong(1, idEstudiante)
+      val resultado = use(sentencia.executeQuery())
+
+      if (!resultado.next()) {
+        throw new IllegalStateException("No se encontro el estudiante para postular.")
+      }
+
+      val rol = Option(resultado.getString("rol")).map(_.trim.toLowerCase).getOrElse("")
+      val activo = resultado.getBoolean("activo")
+      val ciclo = {
+        val valor = resultado.getInt("ciclo_actual")
+        if (resultado.wasNull()) None else Some(valor)
+      }
+
+      if (rol != "estudiante" || !activo) {
+        throw new IllegalStateException("Solo un estudiante activo puede enviar postulaciones.")
+      }
+
+      ciclo match {
+        case Some(valor) if valor >= CicloMinimoPostulacion =>
+        case Some(valor) =>
+          throw new IllegalStateException(
+            s"El estudiante esta en ciclo $valor. Solo puede postular desde ciclo $CicloMinimoPostulacion."
+          )
+        case None =>
+          throw new IllegalStateException(
+            s"El estudiante no tiene ciclo registrado. Solo puede postular desde ciclo $CicloMinimoPostulacion."
+          )
       }
     }.get
   }

@@ -244,8 +244,12 @@ class UsuarioRepositorio {
         |    ) THEN 'En practica'
         |    WHEN EXISTS (
         |      SELECT 1 FROM practicas p
-        |      WHERE p.id_estudiante = u.id_usuario AND LOWER(p.estado) IN ('finalizada', 'completada')
-        |    ) THEN 'Aprobado'
+        |      WHERE p.id_estudiante = u.id_usuario AND LOWER(p.estado) = 'finalizada'
+        |    ) THEN 'Finalizada'
+        |    WHEN EXISTS (
+        |      SELECT 1 FROM practicas p
+        |      WHERE p.id_estudiante = u.id_usuario AND LOWER(p.estado) = 'completada'
+        |    ) THEN 'Completada'
         |    WHEN EXISTS (
         |      SELECT 1 FROM postulaciones po
         |      WHERE po.id_estudiante = u.id_usuario AND LOWER(po.estado) = 'pendiente'
@@ -253,7 +257,7 @@ class UsuarioRepositorio {
         |    WHEN EXISTS (
         |      SELECT 1 FROM postulaciones po
         |      WHERE po.id_estudiante = u.id_usuario AND LOWER(po.estado) = 'aprobada'
-        |    ) THEN 'Aprobado'
+        |    ) THEN 'En practica'
         |    ELSE 'Sin actividad'
         |  END AS estado_practica
         |FROM usuarios u

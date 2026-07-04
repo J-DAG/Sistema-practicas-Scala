@@ -1,153 +1,173 @@
 # Sistema de practicas preprofesionales
 
-Sistema de gestion de practicas preprofesionales con vistas Java Swing UI Designer y persistencia en PostgreSQL.
+Aplicacion de escritorio para gestionar practicas preprofesionales. Permite administrar usuarios, empresas, ofertas, postulaciones, practicas, actividades, reportes, notificaciones y formularios simulados.
 
-El proyecto implementa la logica principal de negocio para administrar usuarios, empresas, ofertas, postulaciones, practicas, actividades, formularios simulados y notificaciones.
+## Requisitos
 
-## Instalacion
+Antes de iniciar la aplicacion se necesita instalar:
 
-1. Instalar JDK 17 o superior.
-2. Instalar sbt.
-3. Instalar PostgreSQL.
-4. Abrir el proyecto en IntelliJ IDEA si se desea editar las vistas `.java` generadas por Swing UI Designer.
+- IntelliJ IDEA.
+- JDK 17 o superior configurado en IntelliJ IDEA.
+- PostgreSQL.
 
-No se necesita instalar una libreria adicional para las graficas de reportes. Los graficos se muestran con componentes Swing del propio proyecto y las dependencias necesarias se descargan automaticamente con `sbt`.
+No se necesita instalar librerias adicionales para los graficos de reportes. La aplicacion usa componentes Swing incluidos en el proyecto.
 
-Verificar compilacion:
+## sbt opcional
 
-```bash
-sbt compile
+El proyecto puede ejecutarse desde IntelliJ IDEA sin instalar sbt manualmente, siempre que el IDE tenga configurado un JDK compatible.
+
+Instalar sbt solo es necesario si se desea ejecutar el proyecto desde terminal.
+
+Para instalarlo en Windows:
+
+1. Descargar el instalador desde:
+
+```text
+https://www.scala-sbt.org/download/
 ```
 
-## Base de datos
+2. Ejecutar el instalador de Windows.
+3. Cerrar y volver a abrir la terminal.
+4. Verificar la instalacion con:
 
-Crear la base de datos en PostgreSQL:
+```bash
+sbt --version
+```
+
+Si Windows no reconoce el comando `sbt`, reiniciar el equipo o revisar que la carpeta de instalacion de sbt este agregada al `Path` del sistema.
+
+## Preparar la base de datos
+
+1. Abrir PostgreSQL o pgAdmin.
+2. Crear una base de datos llamada:
 
 ```sql
 CREATE DATABASE sistema_practicas;
 ```
 
-Luego ejecutar el archivo completo:
+3. Conectarse a la base `sistema_practicas`.
+4. Ejecutar completo el archivo:
 
 ```text
 database/esquema.sql
 ```
 
-Opciones recomendadas:
+Este archivo reinicia las tablas y carga los datos iniciales necesarios para ingresar al sistema.
 
-- En pgAdmin: abrir la base `sistema_practicas`, abrir Query Tool, pegar o cargar `database/esquema.sql` y ejecutar todo el script.
+## Configurar conexion
 
-Configurar la conexion en:
+Revisar el archivo:
+
 ```text
 src/main/resources/application.properties
 ```
 
-Configuracion:
+Configuracion por defecto:
 
 ```properties
 db.url=jdbc:postgresql://localhost:5432/sistema_practicas
 db.user=postgres
 db.password=admin
 ```
-Si la clave local de PostgreSQL no es `admin`, actualizar `db.password` antes de iniciar la aplicacion.
-Usuarios iniciales sembrados por `database/esquema.sql`:
+
+Si la clave local de PostgreSQL es diferente, cambiar el valor de `db.password`.
+
+Tambien se pueden usar variables de entorno:
 
 ```text
-Administrador
-Usuario: admin
-Clave: admin
-
-Coordinadora
-Usuario: magali.mejia@ucuenca.edu.ec
-Clave: 123
-
-Tutor academico
-Usuario: pablo.vanegas@ucuenca.edu.ec
-Clave: 123
-
-Tutor empresarial
-Usuario: juanarpi@gmail.com
-Clave: 123
-
-Estudiante
-Usuario: paula.sacoto@ucuenca.edu.ec
-Clave: 123
+DB_URL
+DB_USER
+DB_PASSWORD
 ```
 
-Tambien se siembra la empresa `Banco del Austro` con convenio activo.
+## Ejecutar la aplicacion
 
-## Roles
+Opcion recomendada:
+
+1. Abrir el proyecto en IntelliJ IDEA.
+2. Verificar que tenga configurado un JDK 17 o superior.
+3. Ejecutar la clase principal del sistema.
+
+Opcion desde terminal, si se instalo sbt:
+
+```bash
+sbt run
+```
+
+
+## Usuarios iniciales
+
+Despues de ejecutar `database/esquema.sql`, se puede ingresar con estos usuarios:
+
+| Rol | Usuario | Clave |
+| --- | --- | --- |
+| Administrador | admin | admin |
+| Coordinadora | magali.mejia@ucuenca.edu.ec | 123 |
+| Tutor academico | pablo.vanegas@ucuenca.edu.ec | 123 |
+| Tutor empresarial | juanarpi@gmail.com | 123 |
+| Estudiante | paula.sacoto@ucuenca.edu.ec | 123 |
+
+La empresa inicial es `Banco del Austro`.
+
+## Roles del sistema
+
+El sistema maneja cinco tipos de usuario:
+
 - Administrador: gestiona usuarios y empresas.
 - Coordinador: gestiona empresas, tutores, estudiantes, ofertas, postulaciones, practicas y reportes.
-- Estudiante: revisa ofertas, postula con PDF, consulta postulaciones, practica, actividades y formularios.
+- Estudiante: revisa ofertas, envia postulaciones con PDF, consulta postulaciones, practica, actividades y formularios.
 - Tutor academico: revisa practicas asignadas, aprueba o niega actividades y califica practicas finalizadas.
-- Tutor empresarial: gestiona actividades de estudiantes asignados y marca actividades aprobadas como completadas.
+- Tutor empresarial: registra actividades, edita actividades pendientes o negadas y marca actividades aprobadas como completadas.
 
-## Reglas de negocio
+## Flujo general de uso
 
-- Todos los usuarios heredan de `Usuario`: estudiante, tutor academico, tutor empresarial, coordinador y administrador.
+1. El administrador o coordinador registra empresas, tutores y estudiantes.
+2. El coordinador crea ofertas de practicas.
+3. El estudiante revisa las ofertas disponibles.
+4. El estudiante postula adjuntando su PDF de avance de malla.
+5. El coordinador revisa la postulacion.
+6. Si la postulacion es aprobada, el coordinador asigna tutor academico, tutor empresarial y fechas de practica.
+7. El tutor empresarial registra actividades para el estudiante.
+8. El tutor academico aprueba o niega las actividades.
+9. El tutor empresarial marca como completadas las actividades aprobadas.
+10. Al completar 240 horas, la practica pasa a finalizada.
+11. El tutor academico califica la practica.
+12. El estudiante puede revisar sus formularios finales.
+
+## Reglas principales
+
 - La cedula se valida con reglas de Ecuador.
-- El estudiante debe adjuntar un PDF de avance de malla para postular.
+- El estudiante debe estar en ciclo 6 o superior para postular.
+- El estudiante debe adjuntar un PDF de avance de malla.
 - El estudiante no puede postular si tiene una practica activa, finalizada pendiente de calificacion o completada.
-- El estudiante puede cancelar postulaciones pendientes; se elimina el registro pendiente.
-- El coordinador aprueba o niega postulaciones desde una ventana de revision.
-- Al aprobar una postulacion se asignan tutor academico, tutor empresarial, fechas y se crea la practica.
-- Si la empresa no tiene convenio, el estudiante puede visualizar carta compromiso simulada.
+- El estudiante puede cancelar postulaciones pendientes.
+- El coordinador aprueba o niega postulaciones desde la ventana de revision.
+- Al aprobar una postulacion se crea la practica y se asignan los tutores.
+- Si la empresa no tiene convenio, el estudiante puede visualizar la carta compromiso.
 - Las actividades no pueden superar 240 horas planificadas.
-- El tutor empresarial crea, edita o elimina actividades segun estado.
 - No se pueden editar actividades aprobadas o completadas.
-- Solo se pueden eliminar actividades pendientes de aprobacion.
-- El tutor academico aprueba o niega actividades.
-- Una actividad negada no se elimina; el tutor empresarial puede editarla y vuelve a pendiente de aprobacion.
-- Si el tutor academico nego por error, puede aprobar directamente la actividad negada.
+- Una actividad negada puede ser corregida por el tutor empresarial y vuelve a pendiente de aprobacion.
 - El tutor empresarial solo puede completar actividades aprobadas.
-- Al llegar a 240 horas cumplidas, la practica pasa a `finalizada` y se notifican estudiante, tutores y coordinador.
+- Al llegar a 240 horas cumplidas, se notifica al estudiante, tutores y coordinador.
 - El tutor academico califica practicas finalizadas sobre 100.
-- Al calificar, la practica pasa a `completada` y se marca el Formulario 2 final como enviado al correo del estudiante.
-- Una practica `completada` no se reabre modificando actividades.
-- Al eliminar un estudiante se eliminan sus postulaciones, practicas y actividades relacionadas.
-- Al eliminar un tutor con practicas o actividades relacionadas, se exige seleccionar un tutor reemplazo.
-- La reasignacion de tutores migra practicas y referencias de actividades al tutor reemplazo.
-- El tutor empresarial reemplazo debe pertenecer a la misma empresa.
+- Al calificar, la practica pasa a completada.
+- Al eliminar un tutor con practicas asignadas, se solicita un tutor reemplazo.
+- Al eliminar un estudiante, se eliminan sus postulaciones, practicas y actividades relacionadas.
 
 ## Formularios
 
-El sistema simula los formularios en pantalla y mediante notificaciones.
-- Formulario 1: datos iniciales de la practica, empresa, tutores, fechas, oferta y area.
-- Carta compromiso: disponible solo cuando la empresa no tiene convenio.
-- Formulario 2 final: disponible cuando la practica fue calificada por el tutor academico.
+El sistema simula el envio de formularios y documentos:
 
-## Flujo de prueba recomendado
-1. Ingresar como `admin/admin`.
-2. Crear una empresa.
-3. Crear un coordinador.
-4. Crear un tutor academico.
-5. Crear un tutor empresarial asociado a la empresa.
-6. Crear un estudiante.
-7. Ingresar como coordinador.
-8. Crear una oferta.
-9. Ingresar como estudiante.
-10. Postular a la oferta adjuntando un PDF.
-11. Ingresar como coordinador.
-12. Revisar la postulacion.
-13. Aprobar asignando TA, TE y fechas.
-14. Ingresar como tutor empresarial.
-15. Crear actividades sin superar 240 horas.
-16. Ingresar como tutor academico.
-17. Aprobar o negar actividades.
-18. Si una actividad fue negada, ingresar como tutor empresarial, corregirla y reenviarla.
-19. Marcar actividades aprobadas como completadas.
-20. Completar 240 horas.
-21. Ingresar como tutor academico y calificar la practica.
-22. Ingresar como estudiante y revisar Formulario 2 final.
+- Formulario 1: informacion inicial de la practica.
+- Carta compromiso: disponible cuando la empresa no tiene convenio.
+- Formulario 2 final: disponible cuando la practica fue calificada.
 
-## Compilacion
+## Documentos adjuntos
 
-Compilar:
+Los PDFs enviados por los estudiantes se guardan en:
 
-```bash
-sbt compile
+```text
+documentos_postulacion/
 ```
-## Notas
-- `documentos_postulacion/` guarda los PDFs enviados por estudiantes.
-- Para cambiar credenciales de base de datos, editar `application.properties` o usar variables de entorno `DB_URL`, `DB_USER` y `DB_PASSWORD`.
+
+Esta carpeta contiene los archivos cargados por los estudiantes al enviar sus postulaciones.

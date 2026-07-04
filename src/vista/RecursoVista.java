@@ -1,10 +1,15 @@
 package vista;
 
 import javax.swing.ImageIcon;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 
 public final class RecursoVista {
+    private static final ImageIcon ICONO_VACIO = new ImageIcon(
+            new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
+    );
+
     private RecursoVista() {
     }
 
@@ -32,6 +37,6 @@ public final class RecursoVista {
             return new ImageIcon(archivo.getAbsolutePath());
         }
 
-        return new ImageIcon();
+        return ICONO_VACIO;
     }
 }

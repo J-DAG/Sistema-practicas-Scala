@@ -1,6 +1,7 @@
 package controlador
 
 import modelo.entidades.{EstudianteResumen, Usuario}
+import modelo.reportes.{AnalisisReportes, ResumenCiclo}
 import modelo.repositorios.{EmpresaRepositorio, PostulacionRepositorio, PracticaRepositorio, UsuarioRepositorio}
 import vista.VistaCoordinadorReportes
 
@@ -55,17 +56,14 @@ class ControlCoordinadorReportes(usuarioSesion: Usuario, alInicio: () => Unit, a
   }
 
   private def cargarGraficoPracticas(conteos: Map[String, Int]): Unit = {
-    val estados = List("activa", "finalizada", "completada", "cerrada")
-    val total = estados.map(conteos.getOrElse(_, 0)).sum
+    val segmentos = AnalisisReportes.resumenPracticasDesdeConteos(conteos)
+    val total = segmentos.headOption.map(_.total).getOrElse(0)
 
     vista.widgetGraficoPastel.removeAll()
     vista.widgetGraficoPastel.setBorder(BorderFactory.createTitledBorder("Practicas por estado"))
     vista.widgetGraficoPastel.add(panelResumen(
-      estados.map { estado =>
-        val cantidad = conteos.getOrElse(estado, 0)
-        val porcentaje = if (total == 0) 0 else Math.round((cantidad.toDouble / total.toDouble) * 100)
-        (s"${nombreEstado(estado)}: $cantidad ($porcentaje%)", colorEstadoPractica(estado))
-      } :+ (s"Total practicas: $total", new Color(45, 45, 45)),
+      segmentos.map(segmento => (segmento.texto, colorEstadoPractica(segmento.clave))) :+
+        (s"Total practicas: $total", new Color(45, 45, 45)),
       fondoTotal = false
     ))
     vista.widgetGraficoPastel.revalidate()
@@ -73,10 +71,7 @@ class ControlCoordinadorReportes(usuarioSesion: Usuario, alInicio: () => Unit, a
   }
 
   private def cargarGraficoCiclos(estudiantes: List[EstudianteResumen]): Unit = {
-    val estudiantesPorCiclo = estudiantes.groupBy(_.cicloActual.getOrElse(0))
-    val ciclosRegistrados = estudiantesPorCiclo.keySet.filter(_ > 0)
-    val ciclos = (1 to Math.max(10, if (ciclosRegistrados.isEmpty) 10 else ciclosRegistrados.max)).toList
-    val estudiantesSinCiclo = estudiantesPorCiclo.getOrElse(0, Nil)
+    val ciclos = AnalisisReportes.resumenCiclos(estudiantes)
 
     vista.widgetGraficoBarras.removeAll()
     vista.widgetGraficoBarras.setBorder(BorderFactory.createTitledBorder("Practicantes por ciclo"))
@@ -87,10 +82,7 @@ class ControlCoordinadorReportes(usuarioSesion: Usuario, alInicio: () => Unit, a
     if (ciclos.isEmpty) {
       panel.add(etiqueta("No hay estudiantes registrados.", new Color(110, 110, 110)))
     } else {
-      ciclos.foreach(ciclo => agregarResumenCiclo(panel, s"Ciclo $ciclo", ciclo, estudiantesPorCiclo.getOrElse(ciclo, Nil)))
-      if (estudiantesSinCiclo.nonEmpty) {
-        agregarResumenCiclo(panel, "Sin ciclo", 0, estudiantesSinCiclo)
-      }
+      ciclos.foreach(ciclo => agregarResumenCiclo(panel, ciclo))
     }
 
     vista.widgetGraficoBarras.add(panel)
@@ -98,12 +90,8 @@ class ControlCoordinadorReportes(usuarioSesion: Usuario, alInicio: () => Unit, a
     vista.widgetGraficoBarras.repaint()
   }
 
-  private def agregarResumenCiclo(panel: JPanel, nombreCiclo: String, ciclo: Int, estudiantes: List[EstudianteResumen]): Unit = {
-    val conteos = estudiantes.groupBy(_.estadoPractica).view.mapValues(_.size).toMap
-    val texto =
-      s"$nombreCiclo | En practica: ${conteos.getOrElse("En practica", 0)} | Aprobados: ${conteos.getOrElse("Aprobado", 0)} | Postulando: ${conteos.getOrElse("Postulando", 0)} | Sin actividad: ${conteos.getOrElse("Sin actividad", 0)}"
-    panel.add(etiqueta(texto, colorCiclo(ciclo)))
-  }
+  private def agregarResumenCiclo(panel: JPanel, resumen: ResumenCiclo): Unit =
+    panel.add(etiqueta(resumen.texto, colorCiclo(resumen.ciclo.getOrElse(0))))
 
   private def panelResumen(items: Seq[(String, Color)], fondoTotal: Boolean): JPanel = {
     val panel = new JPanel(new GridLayout(0, 1, 6, 6))
@@ -148,15 +136,6 @@ class ControlCoordinadorReportes(usuarioSesion: Usuario, alInicio: () => Unit, a
     )
     colores(Math.abs(ciclo) % colores.length)
   }
-
-  private def nombreEstado(estado: String): String =
-    estado match {
-      case "activa" => "Activas"
-      case "finalizada" => "Finalizadas"
-      case "completada" => "Completadas"
-      case "cerrada" => "Cerradas"
-      case otro => otro.capitalize
-    }
 
   private def abrirEmpresas(): Unit = {
     vista.dispose()

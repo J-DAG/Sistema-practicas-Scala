@@ -72,7 +72,7 @@ public class VistaEstFormularios extends JFrame {
         lblSubTitulo.setBounds(50, 90, 561, 31);
         getContentPane().add(lblSubTitulo);
 
-        btnCartaCompromiso = new JButton("Carta compromiso", RecursoVista.icono("article.png"));
+        btnCartaCompromiso = new JButton("Carta compromiso", RecursoVista.icono("forms_add.png"));
         btnCartaCompromiso.setFont(new Font("Dialog", Font.PLAIN, 10));
         btnCartaCompromiso.setBounds(970, 130, 161, 31);
         getContentPane().add(btnCartaCompromiso);

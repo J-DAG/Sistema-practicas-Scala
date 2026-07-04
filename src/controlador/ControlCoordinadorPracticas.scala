@@ -1,6 +1,8 @@
 package controlador
 
+import controlador.util.ModelosTabla
 import modelo.entidades.{Actividad, PracticaCoordinadorResumen, Usuario}
+import modelo.reportes.AnalisisReportes
 import modelo.repositorios.{ActividadRepositorio, PracticaRepositorio}
 import vista.{VistaCoordinadorPracticas, VistaListaActividades}
 
@@ -55,37 +57,12 @@ class ControlCoordinadorPracticas(usuarioSesion: Usuario, alInicio: () => Unit, 
     }
   }
 
-  private def llenarTabla(datos: List[PracticaCoordinadorResumen]): Unit = {
-    val modelo = new DefaultTableModel(
-      Array[AnyRef]("ID", "Estudiante", "Cedula", "Empresa", "Oferta", "Area", "TA", "TE", "Estado", "Horas", "Calificacion"),
-      0
-    ) {
-      override def isCellEditable(row: Int, column: Int): Boolean = false
-    }
-
-    datos.foreach { practica =>
-      modelo.addRow(Array[AnyRef](
-        Long.box(practica.idPractica),
-        practica.estudiante,
-        practica.cedula,
-        practica.empresa,
-        practica.oferta,
-        practica.area,
-        practica.tutorAcademico,
-        practica.tutorEmpresarial,
-        practica.estado,
-        s"${practica.horasCumplidas}/240 (${practica.porcentaje}%)",
-        practica.calificacion.map(c => s"$c/100").getOrElse("")
-      ))
-    }
-
-    vista.tblPracticas.setModel(modelo)
-  }
+  private def llenarTabla(datos: List[PracticaCoordinadorResumen]): Unit =
+    vista.tblPracticas.setModel(ModelosTabla.practicasCoordinador(datos))
 
   private def cargarGrafico(datos: List[PracticaCoordinadorResumen]): Unit = {
+    val segmentos = AnalisisReportes.resumenPracticas(datos)
     val total = datos.size
-    val conteos = datos.groupBy(_.estado.trim.toLowerCase).view.mapValues(_.size).toMap
-    val estados = List("activa", "finalizada", "completada", "cerrada")
 
     vista.widgetGraficoPastel.removeAll()
     vista.widgetGraficoPastel.setBorder(BorderFactory.createTitledBorder("Practicas por estado"))
@@ -93,12 +70,10 @@ class ControlCoordinadorPracticas(usuarioSesion: Usuario, alInicio: () => Unit, 
     val panel = new JPanel(new GridLayout(0, 1, 6, 6))
     panel.setBackground(Color.WHITE)
 
-    estados.foreach { estado =>
-      val cantidad = conteos.getOrElse(estado, 0)
-      val porcentaje = if (total == 0) 0 else Math.round((cantidad.toDouble / total.toDouble) * 100)
-      val etiqueta = new JLabel(f"${nombreEstado(estado)}: $cantidad%d ($porcentaje%d%%)", SwingConstants.CENTER)
+    segmentos.foreach { segmento =>
+      val etiqueta = new JLabel(segmento.texto, SwingConstants.CENTER)
       etiqueta.setOpaque(true)
-      etiqueta.setBackground(colorEstado(estado))
+      etiqueta.setBackground(colorEstado(segmento.clave))
       etiqueta.setForeground(Color.WHITE)
       etiqueta.setFont(new Font("Dialog", Font.BOLD, 14))
       panel.add(etiqueta)
@@ -212,15 +187,6 @@ class ControlCoordinadorPracticas(usuarioSesion: Usuario, alInicio: () => Unit, 
       case "completada" => new Color(48, 140, 92)
       case "cerrada" => new Color(120, 90, 160)
       case _ => new Color(110, 110, 110)
-    }
-
-  private def nombreEstado(estado: String): String =
-    estado match {
-      case "activa" => "Activas"
-      case "finalizada" => "Finalizadas"
-      case "completada" => "Completadas"
-      case "cerrada" => "Cerradas"
-      case otro => otro.capitalize
     }
 
   private def abrirEmpresas(): Unit = {
